@@ -176,8 +176,13 @@ img { max-width: 100%; }
 }
 
 .hero-avatar {
-  font-size: 4rem;
-  margin-bottom: 16px;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 20px;
+  border: 3px solid var(--border);
+  box-shadow: var(--shadow-lg);
   animation: float 3s ease-in-out infinite;
 }
 
@@ -707,6 +712,14 @@ img { max-width: 100%; }
 .award-badge {
   font-weight: 600;
   font-size: .85rem;
+}
+
+/* ===== 论文发表 ===== */
+.publication-note {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 1rem;
+  padding: 40px 0;
 }
 
 /* ===== 获奖 ===== */
