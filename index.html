@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>耿欣阳 · Xinyang Geng</title>
+  <meta name="description" content="耿欣阳的个人网站 - 上海交通大学计算机学院博士 · 密码学 & AI">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔐</text></svg>">
+</head>
+<body>
+
+  <!-- 导航栏 -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="#home" class="nav-logo">XY.Geng</a>
+      <ul class="nav-links">
+        <li><a href="#about">关于</a></li>
+        <li><a href="#skills">技能</a></li>
+        <li><a href="#research">科研</a></li>
+        <li><a href="#awards">获奖</a></li>
+        <li><a href="#contact">联系</a></li>
+        <li><button class="theme-toggle" id="themeToggle" aria-label="切换主题">🌙</button></li>
+      </ul>
+      <button class="nav-mobile-btn" id="mobileBtn" aria-label="菜单">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- 首页 Hero -->
+  <section class="hero" id="home">
+    <div class="hero-content">
+      <div class="hero-avatar">🔐</div>
+      <h1 class="hero-title">
+        耿欣阳 · <span class="highlight">Xinyang Geng</span>
+      </h1>
+      <p class="hero-subtitle">
+        上海交通大学 · 计算机学院博士生
+      </p>
+      <p class="hero-desc">
+        密码学 × AI · 从理论到同态加密 · 热爱用代码解决复杂问题
+      </p>
+      <div class="hero-buttons">
+        <a href="#research" class="btn btn-primary">科研项目</a>
+        <a href="https://github.com/YangUpdate" target="_blank" rel="noopener" class="btn btn-outline">GitHub</a>
+      </div>
+    </div>
+    <div class="hero-scroll">
+      <span>往下看</span>
+      <div class="scroll-mouse"></div>
+    </div>
+  </section>
+
+  <!-- 关于我 -->
+  <section class="section" id="about">
+    <div class="container">
+      <h2 class="section-title">关于我</h2>
+      <div class="about-grid">
+        <div class="about-text">
+          <p>
+            我是<strong>耿欣阳</strong>，目前在上海交通大学计算机学院攻读博士学位。本科毕业于山东大学网络空间安全学院，专业排名前 15%。
+          </p>
+          <p>
+            研究方向聚焦于<strong>密码学与深度学习</strong>的结合，擅长数学建模、国密算法实现、零知识证明系统构建。熟练使用 Python、C++ 进行开发，对 PyTorch、TensorFlow 等深度学习框架有深入实践。同时积极拥抱 AI 辅助编程工具（Claude Code、Codex）来提升开发效率。
+          </p>
+          <p>
+            CET-6，能够熟练阅读英文专业文献，使用 LaTeX 撰写学术文档。
+          </p>
+          <div class="about-stats">
+            <div class="stat-item">
+              <span class="stat-number">4</span>
+              <span class="stat-label">国家级奖项</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number">SJTU</span>
+              <span class="stat-label">在读博士</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number">3</span>
+              <span class="stat-label">核心项目</span>
+            </div>
+          </div>
+        </div>
+        <div class="about-card">
+          <div class="about-card-inner">
+            <h3>🧰 当前状态</h3>
+            <ul>
+              <li>🎓 上海交通大学 · 计算机学院 · 博士在读</li>
+              <li>🔐 研究方向：密码学 + 深度学习</li>
+              <li>💡 关注：零知识证明 · 后量子密码 · AI Security</li>
+              <li>📍 来自北京</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 教育背景 -->
+  <section class="section section-alt" id="education">
+    <div class="container">
+      <h2 class="section-title">教育经历</h2>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <span class="timeline-date">2025.09 - 至今</span>
+            <h3>上海交通大学 · 计算机学院</h3>
+            <p class="timeline-role">博士研究生</p>
+            <p>核心课程：人工智能的数学基础 (A) · 人工智能安全原理 (A-) · 分布式算法 (A-) · 密码算法 (A-) · 信息论与编码 (A)</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <span class="timeline-date">2021.09 - 2025.06</span>
+            <h3>山东大学 · 网络空间安全学院</h3>
+            <p class="timeline-role">本科 · 专业前 15%</p>
+            <p>高等数学1 (99) · 高等数学2 (99) · Python高级程序设计 (97) · 公钥密码学数学基础 (96) · 数字签名与认证 (95) · 网络空间安全创新创业实践 (97) · 密码分析学 (94) · 有限域及其应用 (95) · 组合学与图论 (94)</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 技能 -->
+  <section class="section" id="skills">
+    <div class="container">
+      <h2 class="section-title">专业技能</h2>
+      <div class="skills-grid">
+        <div class="skill-category">
+          <h3>💻 编程语言 & 系统</h3>
+          <div class="skill-tags">
+            <span>Python</span><span>C++</span><span>Go</span>
+            <span>Linux</span><span>Git</span><span>LaTeX</span>
+          </div>
+        </div>
+        <div class="skill-category">
+          <h3>🧠 深度学习 & 框架</h3>
+          <div class="skill-tags">
+            <span>PyTorch</span><span>TensorFlow</span>
+            <span>Transformer</span><span>数学建模</span>
+            <span>数据分析</span>
+          </div>
+        </div>
+        <div class="skill-category">
+          <h3>🔐 密码学 & 安全</h3>
+          <div class="skill-tags">
+            <span>国密 SM2/SM9</span><span>零知识证明</span>
+            <span>后量子密码</span><span>数字签名</span>
+            <span>代理重加密</span><span>KP-PRE</span>
+          </div>
+        </div>
+        <div class="skill-category">
+          <h3>🤖 AI 辅助 & 工具</h3>
+          <div class="skill-tags">
+            <span>Claude Code</span><span>Codex</span>
+            <span>PyQt</span><span>CET-6</span>
+            <span>学术写作</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 科研项目 -->
+  <section class="section section-alt" id="research">
+    <div class="container">
+      <h2 class="section-title">科研经历</h2>
+      <div class="projects-grid">
+
+        <div class="project-card">
+          <div class="project-icon">🔐</div>
+          <h3 class="project-title">GM-Shield：基于 SM9 的分布式零知识证明系统</h3>
+          <span class="project-role">第一主持人 · 国家级大创项目</span>
+          <p class="project-desc">
+            基于 Pianist 构建支持 SM9 签名的分布式零知识证明系统，将原有密码算法替换为国密算法。独立完成 Zkrypt 零知识证明算法库的 Go 语言重写（<a href="https://github.com/Azzzting/gbn" target="_blank">GBN 库</a>），补充了 BN 椭圆曲线族相关算法在 Go 生态中的实现。
+          </p>
+          <div class="project-tags">
+            <span>SM9</span><span>零知识证明</span><span>Go</span><span>国密算法</span><span>BN曲线</span>
+          </div>
+          <div class="project-links">
+            <a href="https://github.com/Azzzting/gbn" target="_blank" rel="noopener">GBN 库 →</a>
+          </div>
+        </div>
+
+        <div class="project-card">
+          <div class="project-icon">📊</div>
+          <h3 class="project-title">蔬菜类商品定价与补货决策</h3>
+          <span class="project-role">队长 · 高教社杯数学建模竞赛</span>
+          <p class="project-desc">
+            负责数据处理、预测建模与优化求解全流程。基于相关性分析、曲线拟合与时间序列方法预测品类销量和需求趋势，构建线性规划与整数规划模型，求解最优定价与补货方案，并通过统计检验与敏感性分析评估关键变量的影响。
+          </p>
+          <div class="project-tags">
+            <span>数学建模</span><span>时间序列</span><span>线性规划</span><span>敏感性分析</span>
+          </div>
+          <div class="project-links">
+            <span class="award-badge">🥈 国家级二等奖</span>
+          </div>
+        </div>
+
+        <div class="project-card">
+          <div class="project-icon">🔑</div>
+          <h3 class="project-title">后量子算法迁移的代理转加密方案</h3>
+          <span class="project-role">核心成员 · 第八届全国密码技术竞赛</span>
+          <p class="project-desc">
+            设计实现基于国密 SM2、KP-PRE 代理重加密与抗量子算法 Kyber 的数据后量子迁移代理转加密系统。主要负责国密算法实现与 PyQt 界面开发，完成系统功能测试与验证。
+          </p>
+          <div class="project-tags">
+            <span>SM2</span><span>KP-PRE</span><span>Kyber</span><span>PyQt</span><span>后量子密码</span>
+          </div>
+          <div class="project-links">
+            <span class="award-badge">🥇 国家级一等奖</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 获奖 -->
+  <section class="section" id="awards">
+    <div class="container">
+      <h2 class="section-title">荣誉 & 获奖</h2>
+      <div class="awards-grid">
+        <div class="award-card">
+          <div class="award-level gold">国家级一等奖</div>
+          <h3>第八届全国密码技术竞赛</h3>
+          <p>2023 · 核心成员</p>
+        </div>
+        <div class="award-card">
+          <div class="award-level silver">国家级二等奖</div>
+          <h3>高教社杯全国大学生数学建模竞赛</h3>
+          <p>2023 · 队长</p>
+        </div>
+        <div class="award-card">
+          <div class="award-level bronze">国家级三等奖</div>
+          <h3>开源安全奖励计划 · 开源软件重写赛道</h3>
+          <p>2024 · 成员</p>
+        </div>
+        <div class="award-card">
+          <div class="award-level bronze">国家级三等奖</div>
+          <h3>全国高校密码数学挑战赛</h3>
+          <p>2025 · 队长</p>
+        </div>
+        <div class="award-card">
+          <div class="award-level other">其他荣誉</div>
+          <h3>综合奖项 & 奖学金</h3>
+          <p>"建行杯"互联网+ 省级金奖 · 亚太数模二等奖 · 美赛 H 奖 · 三次学业二等奖学金 · 三次特长奖学金 · 校级优秀毕业生 · 创新创业活动先进个人</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 联系 -->
+  <section class="section section-alt" id="contact">
+    <div class="container">
+      <h2 class="section-title">联系我</h2>
+      <p class="contact-intro">
+        对密码学、AI 安全、数学建模感兴趣？欢迎交流合作。
+      </p>
+      <div class="contact-links">
+        <a href="https://github.com/YangUpdate" target="_blank" rel="noopener" class="contact-card">
+          <span class="contact-icon">🐙</span>
+          <span class="contact-label">GitHub</span>
+          <span class="contact-value">@YangUpdate</span>
+        </a>
+        <a href="mailto:13718600519@163.com" class="contact-card">
+          <span class="contact-icon">📧</span>
+          <span class="contact-label">邮箱</span>
+          <span class="contact-value">13718600519@163.com</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 页脚 -->
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2026 Xinyang Geng. Built with ❤️ and hosted on GitHub Pages.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
