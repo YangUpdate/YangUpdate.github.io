@@ -176,8 +176,8 @@ img { max-width: 100%; }
 }
 
 .hero-avatar {
-  width: 220px;
-  height: 220px;
+  width: 150px;
+  height: 150px;
   border-radius: 50%;
   object-fit: cover;
   object-position: center top;
