@@ -3,257 +3,442 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Xinyang Geng (耿欣阳)</title>
-  <meta name="description" content="Xinyang Geng - Ph.D. student at Shanghai Jiao Tong University, working on cryptography and AI.">
-  <link rel="stylesheet" href="style.css?v=3">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90' font-family='Georgia,serif' fill='%231a1a1a'>G</text></svg>">
+  <title>Xinyang Geng — 耿欣阳</title>
+  <meta name="description" content="Xinyang Geng — Ph.D. Student at SJTU. Cryptography × AI.">
+  <style>
+:root {
+  --maxw: 1100px;
+  --sidebarw: 280px;
+  --bg: #f7f8fa;
+  --bg-card: #ffffff;
+  --text: #1a1a2e;
+  --text-sec: #555;
+  --text-muted: #999;
+  --accent: #2b6cb0;
+  --border: rgba(0,0,0,.08);
+  --border-hover: rgba(43,108,176,.25);
+  --shadow: 0 1px 3px rgba(0,0,0,.04);
+  --shadow-hover: 0 3px 12px rgba(0,0,0,.06);
+  --header-bg: rgba(255,255,255,.88);
+  --radius: 8px;
+  --radius-lg: 12px;
+  --gold: #9a6700;
+  --silver: #57606a;
+  --bronze: #bc4c00;
+  --gold-bg: rgba(218,165,32,.08);
+  --silver-bg: rgba(100,100,100,.05);
+  --bronze-bg: rgba(188,76,0,.06);
+}
+
+[data-theme="dark"] {
+  --bg: #0d1117;
+  --bg-card: #161b22;
+  --text: #e6edf3;
+  --text-sec: #9198a1;
+  --text-muted: #6e7681;
+  --accent: #58a6ff;
+  --border: rgba(255,255,255,.1);
+  --border-hover: rgba(88,166,255,.3);
+  --shadow: 0 1px 3px rgba(0,0,0,.3);
+  --shadow-hover: 0 3px 12px rgba(0,0,0,.4);
+  --header-bg: rgba(13,17,23,.85);
+  --gold: #d4a72c;
+  --silver: #c9d1d9;
+  --bronze: #f0883e;
+  --gold-bg: rgba(212,167,44,.1);
+  --silver-bg: rgba(201,209,217,.08);
+  --bronze-bg: rgba(240,136,62,.08);
+}
+
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  line-height: 1.65;
+  color: var(--text);
+  background: var(--bg);
+  transition: background .3s, color .3s;
+}
+* { box-sizing: border-box; }
+a { text-decoration: none; color: var(--accent); }
+a:hover { text-decoration: underline; }
+img { max-width: 100%; }
+
+/* ===== 导航栏 ===== */
+.site-header {
+  position: sticky; top: 0;
+  background: var(--header-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  z-index: 20;
+}
+.site-header__inner {
+  max-width: var(--maxw); margin: 0 auto;
+  padding: .7rem 1.5rem;
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+}
+.site-title { font-weight: 700; font-size: 1rem; color: var(--text); }
+.site-nav { display: flex; gap: .3rem; flex-wrap: wrap; align-items: center; }
+.site-nav__link {
+  color: var(--text-sec); font-size: .9rem;
+  padding: 4px 10px; border-radius: 6px;
+  transition: color .2s, background .2s;
+}
+.site-nav__link:hover { color: var(--text); background: rgba(128,128,128,.1); text-decoration: none; }
+.header-btn {
+  background: transparent; border: 1px solid var(--border);
+  border-radius: 6px; padding: 3px 10px; font-size: .82rem;
+  cursor: pointer; color: var(--text-sec); transition: all .2s;
+}
+.header-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ===== 布局 ===== */
+.site-main { max-width: var(--maxw); margin: 0 auto; padding: 1.8rem 1.5rem 3rem; }
+.home-layout {
+  display: grid;
+  grid-template-columns: var(--sidebarw) minmax(0, 1fr);
+  gap: 2.2rem; align-items: start;
+}
+
+/* ===== 左栏 ===== */
+.profile-sidebar { position: sticky; top: 4.5rem; }
+.profile-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.6rem 1.4rem;
+  box-shadow: var(--shadow);
+}
+.profile-avatar { text-align: center; margin-bottom: 1rem; }
+.profile-avatar img {
+  width: 130px; height: 130px;
+  object-fit: cover; object-position: center 30%;
+  border-radius: 14px; display: inline-block;
+  border: 1px solid var(--border);
+}
+.profile-name { margin: 0; font-size: 1.65rem; font-weight: 800; letter-spacing: -0.02em; text-align: center; }
+.profile-role { margin: .3rem 0 0; font-size: 1rem; color: var(--text-sec); text-align: center; }
+.profile-school { margin: .8rem 0 0; font-size: .9rem; color: var(--text); line-height: 1.5; text-align: center; }
+.profile-school__sub { display: block; color: var(--text-sec); font-size: .84rem; margin-top: .1rem; }
+
+.profile-contact-list { margin: 1rem 0 0; display: flex; flex-direction: column; gap: .5rem; }
+.profile-contact-btn {
+  display: flex; align-items: center; gap: .7rem;
+  padding: .55rem .75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-card);
+  color: var(--text);
+  font-size: .88rem;
+  transition: border-color .2s, box-shadow .2s;
+}
+.profile-contact-btn:hover {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-hover);
+  text-decoration: none;
+}
+.profile-contact-btn svg { width: 18px; height: 18px; flex-shrink: 0; opacity: .7; }
+
+/* ===== 右栏 ===== */
+.home-content { min-width: 0; }
+.home-section { margin-bottom: 1.6rem; }
+.home-section h2 {
+  margin: 0 0 .8rem; font-size: 1.2rem; font-weight: 700;
+  padding-left: 10px; border-left: 3px solid var(--accent);
+  line-height: 1.3;
+}
+
+/* ===== 卡片 ===== */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: .9rem 1.1rem;
+  margin-bottom: .5rem;
+  box-shadow: var(--shadow);
+  transition: box-shadow .2s, border-color .2s;
+}
+.card:hover { box-shadow: var(--shadow-hover); border-color: var(--border-hover); }
+
+.card__body h3 { margin: 0 0 .15rem; font-size: .98rem; line-height: 1.35; }
+.card__body p { margin: .25rem 0; font-size: .88rem; color: var(--text-sec); }
+.card__body ul { margin: .25rem 0; padding-left: 1.1rem; }
+.card__body li { font-size: .86rem; color: var(--text-sec); margin-bottom: .15rem; }
+
+.meta { font-size: .8rem; color: var(--text-muted); margin-bottom: .1rem; }
+.sub { font-size: .88rem; opacity: .75; margin-bottom: .2rem; }
+
+.chips { display: flex; flex-wrap: wrap; gap: .3rem; margin: .25rem 0; }
+.chip {
+  font-size: .74rem; padding: .1rem .5rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  color: var(--text-sec);
+}
+
+.links { display: flex; gap: .6rem; align-items: center; margin-top: .2rem; flex-wrap: wrap; font-size: .85rem; }
+
+.award-badge {
+  display: inline-block; padding: 1px 8px;
+  border-radius: 999px; font-size: .76rem; font-weight: 600;
+  border: 1px solid;
+}
+.award-badge.gold { background: var(--gold-bg); color: var(--gold); border-color: var(--gold); }
+.award-badge.silver { background: var(--silver-bg); color: var(--silver); border-color: var(--silver); }
+.award-badge.bronze { background: var(--bronze-bg); color: var(--bronze); border-color: var(--bronze); }
+
+.about-text { font-size: .9rem; line-height: 1.7; color: var(--text-sec); }
+.about-text strong { color: var(--text); }
+
+/* ===== News 时间线 ===== */
+.news-list { list-style: none; padding: 0; margin: 0; }
+.news-item { display: flex; gap: .8rem; padding: .45rem 0; border-bottom: 1px dashed var(--border); }
+.news-item:last-child { border-bottom: none; }
+.news-date { font-size: .78rem; color: var(--text-muted); white-space: nowrap; min-width: 64px; padding-top: 1px; font-variant-numeric: tabular-nums; }
+.news-text { font-size: .88rem; color: var(--text-sec); line-height: 1.5; }
+.news-text a { color: var(--accent); }
+
+/* ===== 代码链接徽章 ===== */
+.code-link {
+  display: inline-flex; align-items: center; gap: .3rem;
+  font-size: .82rem; color: var(--text-sec);
+  padding: .15rem .55rem; border: 1px solid var(--border);
+  border-radius: 6px; transition: border-color .2s, color .2s;
+}
+.code-link:hover { border-color: var(--accent); color: var(--accent); text-decoration: none; }
+.code-link svg { width: 14px; height: 14px; }
+
+@media (max-width: 900px) {
+  .home-layout { grid-template-columns: 1fr; gap: 1.2rem; }
+  .profile-sidebar { position: static; }
+  .site-nav { display: none; }
+}
+  </style>
 </head>
-<body class="lang-en">
+<body>
 
-  <div class="layout">
-
-    <!-- ===== Left Sidebar ===== -->
-    <aside class="sidebar">
-      <img src="images/you.png" alt="Xinyang Geng" class="profile-photo">
-
-      <h1 class="profile-name">
-        <span data-lang="en">Xinyang Geng</span>
-        <span data-lang="zh">耿欣阳</span>
-      </h1>
-      <p class="profile-title">
-        <span data-lang="en">Ph.D. Student</span>
-        <span data-lang="zh">博士研究生</span>
-      </p>
-      <p class="profile-school">
-        <span data-lang="en">Shanghai Jiao Tong University</span>
-        <span data-lang="zh">上海交通大学</span>
-      </p>
-      <p class="profile-dept">
-        <span data-lang="en">School of Computer Science</span>
-        <span data-lang="zh">计算机学院</span>
-      </p>
-
-      <div class="sidebar-links">
-        <a href="mailto:gengxinyang@sjtu.edu.cn">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg>
-          Email
-        </a>
-        <a href="https://github.com/YangUpdate" target="_blank" rel="noopener">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
-          GitHub
-        </a>
-        <a href="images/you.png" target="_blank">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg>
-          <span data-lang="en">Photo</span>
-          <span data-lang="zh">照片</span>
-        </a>
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="site-title" href="#" data-zh="耿欣阳" data-en="Xinyang Geng">Xinyang Geng</a>
+      <nav class="site-nav">
+        <a class="site-nav__link" href="#about" data-zh="关于" data-en="About">About</a>
+        <a class="site-nav__link" href="#news" data-zh="动态" data-en="News">News</a>
+        <a class="site-nav__link" href="#education" data-zh="教育" data-en="Education">Education</a>
+        <a class="site-nav__link" href="#publications" data-zh="论文" data-en="Publications">Publications</a>
+        <a class="site-nav__link" href="#research" data-zh="科研" data-en="Research">Research</a>
+        <a class="site-nav__link" href="#awards" data-zh="获奖" data-en="Awards">Awards</a>
+      </nav>
+      <div style="display:flex; gap:.4rem; align-items:center;">
+        <button class="header-btn" id="langToggle" title="Language">EN</button>
+        <button class="header-btn" id="themeToggle" title="Theme" style="font-size:1rem; line-height:1;">🌙</button>
       </div>
+    </div>
+  </header>
 
-      <div class="sidebar-controls">
-        <button class="ctrl-btn" id="langToggle">
-          <span data-lang="en">中文</span>
-          <span data-lang="zh">EN</span>
-        </button>
-        <button class="ctrl-btn" id="themeToggle">🌙</button>
-      </div>
-    </aside>
+  <main class="site-main">
+    <div class="home-layout">
 
-    <!-- ===== Main Content ===== -->
-    <main class="main-content">
-
-      <!-- About -->
-      <section id="about">
-        <h2 class="section-heading">
-          <span data-lang="en">About</span>
-          <span data-lang="zh">关于</span>
-        </h2>
-        <div class="section-content">
-          <p data-lang="en">I am a first-year Ph.D. student in the School of Computer Science at Shanghai Jiao Tong University. I received my B.E. degree in Cyberspace Security from Shandong University in 2025, where I ranked in the top 15% and was awarded the Outstanding Graduate honor. My research interests lie at the intersection of cryptography and artificial intelligence, with a particular focus on homomorphic encryption, post-quantum cryptography, and AI security.</p>
-          <p data-lang="zh">我是上海交通大学计算机学院的博士一年级研究生。2025年本科毕业于山东大学网络空间安全学院，专业排名前15%，获校级优秀毕业生荣誉。研究方向聚焦于密码学与人工智能的交叉领域，特别关注同态加密、后量子密码和AI安全。</p>
-        </div>
-      </section>
-
-      <!-- News -->
-      <section id="news">
-        <h2 class="section-heading">
-          <span data-lang="en">News</span>
-          <span data-lang="zh">动态</span>
-        </h2>
-        <div class="section-content">
-          <ul class="news-list">
-            <li>
-              <span class="news-date">2025.09</span>
-              <span data-lang="en">Started Ph.D. at Shanghai Jiao Tong University.</span>
-              <span data-lang="zh">入读上海交通大学博士研究生。</span>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <!-- Education -->
-      <section id="education">
-        <h2 class="section-heading">
-          <span data-lang="en">Education</span>
-          <span data-lang="zh">教育经历</span>
-        </h2>
-        <div class="section-content">
-          <div class="entry">
-            <div class="entry-header">
-              <h3>
-                <span data-lang="en">Shanghai Jiao Tong University</span>
-                <span data-lang="zh">上海交通大学</span>
-              </h3>
-              <span class="entry-date">2025 — Present</span>
-            </div>
-            <p class="entry-role">
-              <span data-lang="en">Ph.D. in Computer Science</span>
-              <span data-lang="zh">计算机科学 · 博士</span>
-            </p>
+      <!-- 左栏 -->
+      <aside class="profile-sidebar">
+        <div class="profile-card">
+          <div class="profile-avatar">
+            <img src="images/you.png" alt="Xinyang Geng">
           </div>
-          <div class="entry">
-            <div class="entry-header">
-              <h3>
-                <span data-lang="en">Shandong University</span>
-                <span data-lang="zh">山东大学</span>
-              </h3>
-              <span class="entry-date">2021 — 2025</span>
-            </div>
-            <p class="entry-role">
-              <span data-lang="en">B.E. in Cyberspace Security · Top 15% · Outstanding Graduate</span>
-              <span data-lang="zh">网络空间安全 · 本科 · 专业前15% · 校级优秀毕业生</span>
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Research Interests -->
-      <section id="research">
-        <h2 class="section-heading">
-          <span data-lang="en">Research Interests</span>
-          <span data-lang="zh">研究方向</span>
-        </h2>
-        <div class="section-content">
-          <div class="tag-list">
-            <span class="tag"><span data-lang="en">Homomorphic Encryption</span><span data-lang="zh">同态加密</span></span>
-            <span class="tag"><span data-lang="en">Post-Quantum Cryptography</span><span data-lang="zh">后量子密码</span></span>
-            <span class="tag"><span data-lang="en">AI Security</span><span data-lang="zh">AI安全</span></span>
-            <span class="tag"><span data-lang="en">Applied Cryptography</span><span data-lang="zh">应用密码学</span></span>
-          </div>
-        </div>
-      </section>
-
-      <!-- Publications -->
-      <section id="publications">
-        <h2 class="section-heading">
-          <span data-lang="en">Publications</span>
-          <span data-lang="zh">论文发表</span>
-        </h2>
-        <div class="section-content">
-          <p class="empty-note">
-            <span data-lang="en">No publications yet. Stay tuned.</span>
-            <span data-lang="zh">暂无已发表论文，敬请期待。</span>
+          <h1 class="profile-name" data-zh="耿欣阳" data-en="Xinyang Geng">Xinyang Geng</h1>
+          <p class="profile-role" data-zh="博士研究生" data-en="Ph.D. Student">Ph.D. Student</p>
+          <p class="profile-school">
+            <span data-zh="上海交通大学" data-en="Shanghai Jiao Tong University">Shanghai Jiao Tong University</span>
+            <span class="profile-school__sub" data-zh="计算机学院" data-en="School of Computer Science">School of Computer Science</span>
           </p>
-        </div>
-      </section>
 
-      <!-- Previous Projects -->
-      <section id="projects">
-        <h2 class="section-heading">
-          <span data-lang="en">Previous Projects</span>
-          <span data-lang="zh">项目经历</span>
-        </h2>
-        <div class="section-content">
-
-          <div class="entry">
-            <div class="entry-header">
-              <h3>
-                <span data-lang="en">GM-Shield: Distributed Zero-Knowledge Proof System Based on SM9</span>
-                <span data-lang="zh">GM-Shield：基于SM9的分布式零知识证明系统</span>
-              </h3>
-              <span class="entry-date">2023 — 2024</span>
+          <div class="profile-contact-list">
+            <a class="profile-contact-btn" href="mailto:gengxinyang@sjtu.edu.cn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 7l10 7 10-7"/></svg>
+              <span>Email</span>
+            </a>
+            <a class="profile-contact-btn" href="https://github.com/YangUpdate" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56v-1.96C5.65 20.86 4.97 18.7 4.97 18.7c-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.71.08-.71 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.73-1.55-2.56-.29-5.25-1.28-5.25-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.47.11-3.07 0 0 .97-.31 3.18 1.18a11.1 11.1 0 0 1 2.9-.39 11.1 11.1 0 0 1 2.9.39c2.2-1.49 3.17-1.18 3.17-1.18.64 1.6.24 2.78.12 3.07.74.81 1.19 1.84 1.19 3.1 0 4.43-2.7 5.4-5.27 5.69.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56C20.21 21.39 23.5 17.08 23.5 12c0-6.35-5.15-11.5-11.5-11.5z"/></svg>
+              <span>GitHub</span>
+            </a>
+            <div class="profile-contact-btn" style="cursor:default;">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+              <span data-zh="上海" data-en="Shanghai">Shanghai</span>
             </div>
-            <p class="entry-role">
-              <span data-lang="en">Principal Investigator · National Innovation Training Program</span>
-              <span data-lang="zh">第一主持人 · 国家级大学生创新创业训练计划</span>
-            </p>
-            <p data-lang="en" class="entry-desc">Built a distributed zero-knowledge proof system supporting SM9 signatures based on Pianist. Rewrote the Zkrypt ZKP algorithm library in Go (<a href="https://github.com/Azzzting/gbn" target="_blank" rel="noopener">GBN library</a>), implementing BN elliptic curve family algorithms for the Go ecosystem.</p>
-            <p data-lang="zh" class="entry-desc">基于Pianist构建支持SM9签名的分布式零知识证明系统。负责Zkrypt零知识证明算法库的Go语言重写（<a href="https://github.com/Azzzting/gbn" target="_blank" rel="noopener">GBN库</a>），补充了BN椭圆曲线族相关算法在Go生态中的实现。</p>
           </div>
-
-          <div class="entry">
-            <div class="entry-header">
-              <h3>
-                <span data-lang="en">Pricing and Replenishment Decision for Vegetable Products</span>
-                <span data-lang="zh">蔬菜类商品定价与补货决策</span>
-              </h3>
-              <span class="entry-date">2023</span>
-            </div>
-            <p class="entry-role">
-              <span data-lang="en">Team Leader · CUMCM · National Second Prize</span>
-              <span data-lang="zh">队长 · 全国大学生数学建模竞赛 · 国家级二等奖</span>
-            </p>
-            <p data-lang="en" class="entry-desc">Led the full pipeline of data processing, predictive modeling, and optimization. Used correlation analysis, curve fitting, and time series methods to forecast demand, then built linear and integer programming models for optimal pricing and replenishment.</p>
-            <p data-lang="zh" class="entry-desc">负责数据处理、预测建模与优化求解全流程。基于相关性分析、曲线拟合与时间序列方法预测需求，构建线性规划与整数规划模型求解最优定价与补货方案。</p>
-          </div>
-
-          <div class="entry">
-            <div class="entry-header">
-              <h3>
-                <span data-lang="en">Proxy Re-Encryption Scheme for Post-Quantum Migration</span>
-                <span data-lang="zh">面向后量子算法迁移的代理转加密方案</span>
-              </h3>
-              <span class="entry-date">2023</span>
-            </div>
-            <p class="entry-role">
-              <span data-lang="en">Core Member · National Cryptography Technology Competition · National First Prize</span>
-              <span data-lang="zh">核心成员 · 全国密码技术竞赛 · 国家级一等奖</span>
-            </p>
-            <p data-lang="en" class="entry-desc">Designed a post-quantum migration proxy re-encryption system based on SM2, KP-PRE, and Kyber. Responsible for SM2 implementation and PyQt interface development.</p>
-            <p data-lang="zh" class="entry-desc">设计基于国密SM2、KP-PRE代理重加密与抗量子算法Kyber的数据后量子迁移代理转加密系统。负责国密算法实现与PyQt界面开发。</p>
-          </div>
-
         </div>
-      </section>
+      </aside>
 
-      <!-- Honors & Awards -->
-      <section id="awards">
-        <h2 class="section-heading">
-          <span data-lang="en">Honors &amp; Awards</span>
-          <span data-lang="zh">荣誉与获奖</span>
-        </h2>
-        <div class="section-content">
-          <ul class="awards-list">
-            <li>
-              <span class="award-date">2025</span>
-              <span data-lang="en">National Third Prize · National College Cryptography Math Challenge</span>
-              <span data-lang="zh">国家级三等奖 · 全国高校密码数学挑战赛</span>
-            </li>
-            <li>
-              <span class="award-date">2024</span>
-              <span data-lang="en">National Third Prize · Open Source Security Reward Program</span>
-              <span data-lang="zh">国家级三等奖 · 开源安全奖励计划</span>
-            </li>
-            <li>
-              <span class="award-date">2023</span>
-              <span data-lang="en">National First Prize · 8th National Cryptography Technology Competition</span>
-              <span data-lang="zh">国家级一等奖 · 第八届全国密码技术竞赛</span>
-            </li>
-            <li>
-              <span class="award-date">2023</span>
-              <span data-lang="en">National Second Prize · CUMCM</span>
-              <span data-lang="zh">国家级二等奖 · 全国大学生数学建模竞赛</span>
-            </li>
-          </ul>
-        </div>
-      </section>
+      <!-- 右栏 -->
+      <div class="home-content">
 
-    </main>
-  </div>
+        <section id="about" class="home-section">
+          <h2 data-zh="关于我" data-en="About">About</h2>
+          <div class="card">
+            <div class="about-text">
+              <p data-zh="我是<strong>耿欣阳</strong>，目前在上海交通大学计算机学院攻读博士学位。本科毕业于山东大学网络空间安全学院，专业排名前 15%。" data-en="I am <strong>Xinyang Geng</strong>, currently pursuing my Ph.D. at the School of Computer Science, Shanghai Jiao Tong University. I received my B.S. degree from the School of Cyber Science and Technology, Shandong University, ranking in the top 15% of my undergraduate cohort.">I am <strong>Xinyang Geng</strong>, currently pursuing my Ph.D. at the School of Computer Science, Shanghai Jiao Tong University. I received my B.S. degree from the School of Cyber Science and Technology, Shandong University, ranking in the top 15% of my undergraduate cohort.</p>
+              <p data-zh="研究方向聚焦于<strong>密码学与 AI</strong>的交叉领域，特别关注同态加密、后量子密码和 AI 安全。" data-en="My research lies at the intersection of <strong>cryptography and AI</strong>, with a particular focus on homomorphic encryption, post-quantum cryptography, and AI security.">My research lies at the intersection of <strong>cryptography and AI</strong>, with a particular focus on homomorphic encryption, post-quantum cryptography, and AI security.</p>
+            </div>
+          </div>
+        </section>
 
-  <footer class="footer">
-    <p>&copy; 2026 Xinyang Geng</p>
+        <section id="news" class="home-section">
+          <h2 data-zh="动态" data-en="News">News</h2>
+          <div class="card">
+            <ul class="news-list">
+              <li class="news-item">
+                <span class="news-date">2025.09</span>
+                <span class="news-text" data-zh="进入上海交通大学计算机学院攻读博士学位。" data-en="Started Ph.D. at the School of Computer Science, Shanghai Jiao Tong University.">Started Ph.D. at the School of Computer Science, Shanghai Jiao Tong University.</span>
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <section id="education" class="home-section">
+          <h2 data-zh="教育经历" data-en="Education">Education</h2>
+          <div class="card">
+            <div class="meta" data-zh="2025.09 – 至今 · 上海" data-en="2025.09 – Present · Shanghai">2025.09 – Present · Shanghai</div>
+            <div class="card__body">
+              <h3 data-zh="上海交通大学 · 计算机学院" data-en="Shanghai Jiao Tong University · School of Computer Science">Shanghai Jiao Tong University · School of Computer Science</h3>
+              <div class="sub" data-zh="博士研究生 · 密码学 × AI" data-en="Ph.D. · Cryptography × AI">Ph.D. · Cryptography × AI</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="meta" data-zh="2021.09 – 2025.06 · 青岛" data-en="2021.09 – 2025.06 · Qingdao">2021.09 – 2025.06 · Qingdao</div>
+            <div class="card__body">
+              <h3 data-zh="山东大学 · 网络空间安全学院" data-en="Shandong University · School of Cyber Science and Technology">Shandong University · School of Cyber Science and Technology</h3>
+              <div class="sub" data-zh="本科 · 专业前 15% · 校级优秀毕业生" data-en="B.S. · Top 15% · Outstanding Graduate">B.S. · Top 15% · Outstanding Graduate</div>
+            </div>
+          </div>
+        </section>
+
+        <section id="publications" class="home-section">
+          <h2 data-zh="论文发表" data-en="Publications">Publications</h2>
+          <div class="card">
+            <p style="opacity:.5; text-align:center; margin:0; padding:.3rem 0;" data-zh="暂无已发表论文，敬请期待。" data-en="Publications coming soon.">Publications coming soon.</p>
+          </div>
+        </section>
+
+        <section id="research" class="home-section">
+          <h2 data-zh="科研经历" data-en="Research">Research</h2>
+          <div class="card">
+            <div class="meta" data-zh="第一主持人 · 国家级大创项目" data-en="Lead PI · National Innovation Project">Lead PI · National Innovation Project</div>
+            <div class="card__body">
+              <h3 data-zh="GM-Shield：基于 SM9 数字签名分布式零知识证明系统" data-en="GM-Shield: A Distributed Zero-Knowledge Proof System Based on SM9 Signatures">GM-Shield: A Distributed Zero-Knowledge Proof System Based on SM9 Signatures</h3>
+              <p data-zh="基于 Pianist 构建支持 SM9 签名的分布式零知识证明系统。负责 Zkrypt 零知识证明算法库的 Go 语言重写（GBN 库），补充了 BN 椭圆曲线族相关算法在 Go 生态中的实现。" data-en="Developed a distributed zero-knowledge proof system supporting SM9 signatures based on Pianist. Led the Go-language porting of the zkrypt ZKP library (GBN repository), extending the Go cryptographic ecosystem with BN curve implementations.">Developed a distributed zero-knowledge proof system supporting SM9 signatures based on Pianist. Led the Go-language porting of the zkrypt ZKP library (GBN repository), extending the Go cryptographic ecosystem with BN curve implementations.</p>
+              <div class="chips"><span class="chip">SM9</span><span class="chip" data-zh="零知识证明" data-en="ZKP">ZKP</span><span class="chip">Go</span><span class="chip" data-zh="BN曲线" data-en="BN Curves">BN Curves</span></div>
+              <div class="links">
+                <a class="code-link" href="https://github.com/Azzzting/gbn" target="_blank" rel="noopener">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56v-1.96C5.65 20.86 4.97 18.7 4.97 18.7c-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.71.08-.71 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.73-1.55-2.56-.29-5.25-1.28-5.25-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.47.11-3.07 0 0 .97-.31 3.18 1.18a11.1 11.1 0 0 1 2.9-.39 11.1 11.1 0 0 1 2.9.39c2.2-1.49 3.17-1.18 3.17-1.18.64 1.6.24 2.78.12 3.07.74.81 1.19 1.84 1.19 3.1 0 4.43-2.7 5.4-5.27 5.69.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56C20.21 21.39 23.5 17.08 23.5 12c0-6.35-5.15-11.5-11.5-11.5z"/></svg>
+                  <span data-zh="GBN 仓库" data-en="GBN repository">GBN repository</span>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="meta" data-zh="队长 · 高教社杯数学建模竞赛" data-en="Team Leader · CUMCM">Team Leader · CUMCM</div>
+            <div class="card__body">
+              <h3 data-zh="基于数学规划与预测的蔬菜类商品定价与补货决策" data-en="Pricing & Replenishment Decisions for Vegetable Products via Mathematical Programming">Pricing & Replenishment Decisions for Vegetable Products via Mathematical Programming</h3>
+              <p data-zh="负责数据处理、预测建模与优化求解全流程。基于相关性分析、时间序列方法预测销量，构建线性规划与整数规划模型求解最优方案。" data-en="Led the full pipeline: data processing, predictive modeling, and optimization. Applied correlation analysis and time-series methods for demand forecasting, and formulated linear programming (LP) and integer linear programming (ILP) models for optimal pricing and replenishment decisions.">Led the full pipeline: data processing, predictive modeling, and optimization. Applied correlation analysis and time-series methods for demand forecasting, and formulated linear programming (LP) and integer linear programming (ILP) models for optimal pricing and replenishment decisions.</p>
+              <div class="chips"><span class="chip" data-zh="数学建模" data-en="Math Modeling">Math Modeling</span><span class="chip" data-zh="时间序列" data-en="Time Series">Time Series</span><span class="chip" data-zh="线性规划" data-en="LP">LP</span></div>
+              <div class="links"><span class="award-badge silver" data-zh="国家级二等奖" data-en="Second Prize (National Level)">Second Prize (National Level)</span></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="meta" data-zh="核心成员 · 第八届全国密码技术竞赛" data-en="Core Member · 8th National Cryptography Technology Competition">Core Member · 8th National Cryptography Technology Competition</div>
+            <div class="card__body">
+              <h3 data-zh="面向后量子算法迁移的代理转加密方案设计" data-en="Proxy Re-Encryption for Post-Quantum Algorithm Migration">Proxy Re-Encryption for Post-Quantum Algorithm Migration</h3>
+              <p data-zh="设计实现基于 SM2、KP-PRE 代理重加密与抗量子算法 Kyber 的后量子迁移代理转加密系统。负责 SM2 算法和 SM3 算法实现与 PyQt 界面开发。" data-en="Designed a proxy re-encryption framework for post-quantum migration, combining SM2-based encryption, KP-PRE, and the quantum-resistant algorithm Kyber. Implemented SM2 and SM3 algorithms and developed the PyQt interface.">Designed a proxy re-encryption framework for post-quantum migration, combining SM2-based encryption, KP-PRE, and the quantum-resistant algorithm Kyber. Implemented SM2 and SM3 algorithms and developed the PyQt interface.</p>
+              <div class="chips"><span class="chip">SM2</span><span class="chip">Kyber</span><span class="chip" data-zh="后量子密码" data-en="PQC">PQC</span><span class="chip">PyQt</span></div>
+              <div class="links"><span class="award-badge gold" data-zh="国家级一等奖" data-en="First Prize (National Level)">First Prize (National Level)</span></div>
+            </div>
+          </div>
+        </section>
+
+        <section id="awards" class="home-section">
+          <h2 data-zh="荣誉与获奖" data-en="Honors & Awards">Honors & Awards</h2>
+          <div class="card">
+            <div class="card__body">
+              <h3 data-zh="第八届全国密码技术竞赛" data-en="8th National Cryptography Technology Competition">8th National Cryptography Technology Competition</h3>
+              <div class="meta" data-zh="2023 · 核心成员" data-en="2023 · Core Member">2023 · Core Member</div>
+              <div class="links"><span class="award-badge gold" data-zh="国家级一等奖" data-en="First Prize (National Level)">First Prize (National Level)</span></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card__body">
+              <h3 data-zh="高教社杯全国大学生数学建模竞赛" data-en="CUMCM (China Undergraduate Mathematical Contest in Modeling)">CUMCM (China Undergraduate Mathematical Contest in Modeling)</h3>
+              <div class="meta" data-zh="2023 · 队长" data-en="2023 · Team Leader">2023 · Team Leader</div>
+              <div class="links"><span class="award-badge silver" data-zh="国家级二等奖" data-en="Second Prize (National Level)">Second Prize (National Level)</span></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card__body">
+              <h3 data-zh="开源安全奖励计划 · 开源软件重写赛道" data-en="Open Source Security Reward · Rewrite Track">Open Source Security Reward · Rewrite Track</h3>
+              <div class="meta" data-zh="2024 · 核心成员" data-en="2024 · Core Member">2024 · Core Member</div>
+              <div class="links"><span class="award-badge bronze" data-zh="国家级三等奖" data-en="Third Prize (National Level)">Third Prize (National Level)</span></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card__body">
+              <h3 data-zh="全国高校密码数学挑战赛" data-en="National College Cryptography Mathematics Challenge">National College Cryptography Mathematics Challenge</h3>
+              <div class="meta" data-zh="2025 · 队长" data-en="2025 · Team Leader">2025 · Team Leader</div>
+              <div class="links"><span class="award-badge bronze" data-zh="国家级三等奖" data-en="Third Prize (National Level)">Third Prize (National Level)</span></div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+  <footer style="border-top:1px solid var(--border); padding:1.2rem; text-align:center; opacity:.5; font-size:.8rem;">
+    &copy; 2026 Xinyang Geng · GitHub Pages
   </footer>
 
-  <script src="script.js?v=3"></script>
+  <script>
+/* ===== 深色模式 ===== */
+const themeToggle = document.getElementById('themeToggle');
+const savedTheme = localStorage.getItem('theme');
+if (savedTheme === 'dark') {
+  document.documentElement.setAttribute('data-theme', 'dark');
+  themeToggle.textContent = '☀️';
+}
+themeToggle.addEventListener('click', () => {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  if (isDark) {
+    document.documentElement.removeAttribute('data-theme');
+    themeToggle.textContent = '🌙';
+    localStorage.setItem('theme', 'light');
+  } else {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    themeToggle.textContent = '☀️';
+    localStorage.setItem('theme', 'dark');
+  }
+});
+
+/* ===== 中英文切换 ===== */
+let isEN = true; // 默认英文
+const langToggle = document.getElementById('langToggle');
+function setLang(en) {
+  isEN = en;
+  document.querySelectorAll('[data-en]').forEach(el => {
+    const v = isEN ? el.getAttribute('data-en') : el.getAttribute('data-zh');
+    if (v !== null) el.innerHTML = v;  // 用 innerHTML 支持 <strong> 和 <a>
+  });
+  langToggle.textContent = isEN ? 'EN' : '中';
+  document.documentElement.lang = isEN ? 'en' : 'zh-CN';
+}
+setLang(true); // 初始化英文
+langToggle.addEventListener('click', () => setLang(!isEN));
+
+/* ===== 平滑滚动 ===== */
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const t = document.querySelector(a.getAttribute('href'));
+    if (t) window.scrollTo({ top: t.getBoundingClientRect().top + scrollY - 60, behavior: 'smooth' });
+  });
+});
+  </script>
 </body>
 </html>
