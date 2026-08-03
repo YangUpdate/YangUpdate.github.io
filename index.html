@@ -1,289 +1,259 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>耿欣阳 · Xinyang Geng</title>
-  <meta name="description" content="耿欣阳的个人网站 - 上海交通大学计算机学院博士 · 密码学 & AI">
-  <link rel="stylesheet" href="style.css">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔐</text></svg>">
+  <title>Xinyang Geng (耿欣阳)</title>
+  <meta name="description" content="Xinyang Geng - Ph.D. student at Shanghai Jiao Tong University, working on cryptography and AI.">
+  <link rel="stylesheet" href="style.css?v=3">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90' font-family='Georgia,serif' fill='%231a1a1a'>G</text></svg>">
 </head>
-<body>
+<body class="lang-en">
 
-  <!-- 导航栏 -->
-  <nav class="navbar" id="navbar">
-    <div class="nav-container">
-      <a href="#home" class="nav-logo">XY.Geng</a>
-      <ul class="nav-links">
-        <li><a href="#about">关于</a></li>
-        <li><a href="#skills">技能</a></li>
-        <li><a href="#research">科研</a></li>
-        <li><a href="#publications">论文</a></li>
-        <li><a href="#awards">获奖</a></li>
-        <li><a href="#contact">联系</a></li>
-        <li><button class="theme-toggle" id="themeToggle" aria-label="切换主题">🌙</button></li>
-      </ul>
-      <button class="nav-mobile-btn" id="mobileBtn" aria-label="菜单">
-        <span></span><span></span><span></span>
-      </button>
-    </div>
-  </nav>
+  <div class="layout">
 
-  <!-- 首页 Hero -->
-  <section class="hero" id="home">
-    <div class="hero-content">
-      <img src="images/you.png" alt="耿欣阳" class="hero-avatar">
-      <h1 class="hero-title">
-        耿欣阳 · <span class="highlight">Xinyang Geng</span>
+    <!-- ===== Left Sidebar ===== -->
+    <aside class="sidebar">
+      <img src="images/you.png" alt="Xinyang Geng" class="profile-photo">
+
+      <h1 class="profile-name">
+        <span data-lang="en">Xinyang Geng</span>
+        <span data-lang="zh">耿欣阳</span>
       </h1>
-      <p class="hero-subtitle">
-        上海交通大学 · 计算机学院博士生
+      <p class="profile-title">
+        <span data-lang="en">Ph.D. Student</span>
+        <span data-lang="zh">博士研究生</span>
       </p>
-      <p class="hero-desc">
-        密码学 × AI · 从后量子密码到同态加密 · 热爱用代码解决复杂问题
+      <p class="profile-school">
+        <span data-lang="en">Shanghai Jiao Tong University</span>
+        <span data-lang="zh">上海交通大学</span>
       </p>
-      <div class="hero-buttons">
-        <a href="#research" class="btn btn-primary">科研项目</a>
-        <a href="https://github.com/YangUpdate" target="_blank" rel="noopener" class="btn btn-outline">GitHub</a>
-      </div>
-    </div>
-    <div class="hero-scroll">
-      <span>往下看</span>
-      <div class="scroll-mouse"></div>
-    </div>
-  </section>
-
-  <!-- 关于我 -->
-  <section class="section" id="about">
-    <div class="container">
-      <h2 class="section-title">关于我</h2>
-      <div class="about-grid">
-        <div class="about-text">
-          <p>
-            我是<strong>耿欣阳</strong>，目前在上海交通大学计算机学院攻读博士学位。本科毕业于山东大学网络空间安全学院，专业排名前 15%。
-          </p>
-          <p>
-            研究方向聚焦于<strong>密码学与AI</strong>的结合。熟练使用 Python、C++ 进行开发，对 PyTorch、TensorFlow 等深度学习框架有深入实践。同时积极拥抱 AI 辅助编程工具（Claude Code、Codex）来提升开发效率。
-          </p>
-          <p>
-            CET-6，能够熟练阅读英文专业文献，使用 LaTeX 撰写学术文档。
-          </p>
-          <div class="about-stats">
-            <div class="stat-item">
-              <span class="stat-number">4</span>
-              <span class="stat-label">国家级奖项</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-number">SJTU</span>
-              <span class="stat-label">在读博士</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-number">3</span>
-              <span class="stat-label">核心项目</span>
-            </div>
-          </div>
-        </div>
-        <div class="about-card">
-          <div class="about-card-inner">
-            <h3>🧰 当前状态</h3>
-            <ul>
-              <li>🎓 上海交通大学 · 计算机学院 · 博士在读</li>
-              <li>🔐 研究方向：密码学 + AI</li>
-              <li>💡 关注：同态加密 · 后量子密码 · AI Security</li>
-              <li>📍 来自北京</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 教育背景 -->
-  <section class="section section-alt" id="education">
-    <div class="container">
-      <h2 class="section-title">教育经历</h2>
-      <div class="timeline">
-        <div class="timeline-item">
-          <div class="timeline-dot"></div>
-          <div class="timeline-content">
-            <span class="timeline-date">2025.09 - 至今</span>
-            <h3>上海交通大学 · 计算机学院</h3>
-            <p class="timeline-role">博士研究生</p>
-          </div>
-        </div>
-        <div class="timeline-item">
-          <div class="timeline-dot"></div>
-          <div class="timeline-content">
-            <span class="timeline-date">2021.09 - 2025.06</span>
-            <h3>山东大学 · 网络空间安全学院</h3>
-            <p class="timeline-role">本科 · 专业前 15% · 校级优秀毕业生</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 技能 -->
-  <section class="section" id="skills">
-    <div class="container">
-      <h2 class="section-title">专业技能</h2>
-      <div class="skills-grid">
-        <div class="skill-category">
-          <h3>💻 编程语言 & 系统</h3>
-          <div class="skill-tags">
-            <span>Python</span><span>C++</span><span>Go</span>
-            <span>Linux</span><span>Git</span><span>LaTeX</span>
-          </div>
-        </div>
-        <div class="skill-category">
-          <h3>🧠 深度学习 & 框架</h3>
-          <div class="skill-tags">
-            <span>PyTorch</span><span>TensorFlow</span>
-            <span>Transformer</span>
-            <span>数据分析与数学建模</span>
-          </div>
-        </div>
-        <div class="skill-category">
-          <h3>🔐 密码学 & 安全</h3>
-          <div class="skill-tags">
-            <span>后量子密码</span><span>同态加密</span>
-            <span>liboqs</span><span>SEAL</span>
-          </div>
-        </div>
-        <div class="skill-category">
-          <h3>🤖 AI 辅助 & 工具</h3>
-          <div class="skill-tags">
-            <span>Claude Code</span><span>Codex</span>
-            <span>CET-6</span><span>学术写作</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 科研项目 -->
-  <section class="section section-alt" id="research">
-    <div class="container">
-      <h2 class="section-title">科研经历</h2>
-      <div class="projects-grid">
-
-        <div class="project-card">
-          <div class="project-icon">🔐</div>
-          <h3 class="project-title">GM-Shield：基于SM9数字签名分布式可扩展零知识证明系统</h3>
-          <span class="project-role">第一主持人 · 国家级大创项目</span>
-          <p class="project-desc">
-            基于 Pianist 构建支持 SM9 签名的分布式零知识证明系统，将原有密码算法替换为国密算法。主要负责 Zkrypt 零知识证明算法库的 Go 语言重写（<a href="https://github.com/Azzzting/gbn" target="_blank">GBN 库</a>），补充了 BN 椭圆曲线族相关算法在 Go 生态中的实现。
-          </p>
-          <div class="project-tags">
-            <span>SM9</span><span>零知识证明</span><span>Go语言</span><span>BN曲线</span>
-          </div>
-          <div class="project-links">
-            <a href="https://github.com/Azzzting/gbn" target="_blank" rel="noopener">GBN 库 →</a>
-          </div>
-        </div>
-
-        <div class="project-card">
-          <div class="project-icon">📊</div>
-          <h3 class="project-title">基于数学规划与预测的蔬菜类商品定价与补货决策问题</h3>
-          <span class="project-role">队长 · 高教社杯数学建模竞赛</span>
-          <p class="project-desc">
-            负责数据处理、预测建模与优化求解全流程。基于相关性分析、曲线拟合与时间序列方法预测品类销量和需求趋势，构建线性规划与整数规划模型，求解最优定价与补货方案，并通过统计检验与敏感性分析评估关键变量的影响。
-          </p>
-          <div class="project-tags">
-            <span>数学建模</span><span>时间序列</span><span>线性规划</span><span>整数规划</span><span>敏感性分析</span>
-          </div>
-          <div class="project-links">
-            <span class="award-badge">🥈 国家级二等奖</span>
-          </div>
-        </div>
-
-        <div class="project-card">
-          <div class="project-icon">🔑</div>
-          <h3 class="project-title">面向后量子算法迁移的代理转加密方案设计</h3>
-          <span class="project-role">核心成员 · 第八届全国密码技术竞赛</span>
-          <p class="project-desc">
-            设计实现基于国密 SM2、KP-PRE 代理重加密与抗量子算法 Kyber 的数据后量子迁移代理转加密系统。主要负责国密算法实现与 PyQt 界面开发，完成系统功能测试与验证。
-          </p>
-          <div class="project-tags">
-            <span>SM2</span><span>KP-PRE</span><span>Kyber</span><span>PyQt</span><span>后量子密码</span>
-          </div>
-          <div class="project-links">
-            <span class="award-badge">🥇 国家级一等奖</span>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- 论文发表 -->
-  <section class="section section-alt" id="publications">
-    <div class="container">
-      <h2 class="section-title">论文发表</h2>
-      <p class="publication-note">
-        暂无已发表论文，敬请期待。
+      <p class="profile-dept">
+        <span data-lang="en">School of Computer Science</span>
+        <span data-lang="zh">计算机学院</span>
       </p>
-    </div>
-  </section>
 
-  <!-- 获奖 -->
-  <section class="section" id="awards">
-    <div class="container">
-      <h2 class="section-title">荣誉 & 获奖</h2>
-      <div class="awards-grid">
-        <div class="award-card">
-          <div class="award-level gold">国家级一等奖</div>
-          <h3>第八届全国密码技术竞赛</h3>
-          <p>2023 · 核心成员</p>
-        </div>
-        <div class="award-card">
-          <div class="award-level silver">国家级二等奖</div>
-          <h3>高教社杯全国大学生数学建模竞赛</h3>
-          <p>2023 · 队长</p>
-        </div>
-        <div class="award-card">
-          <div class="award-level bronze">国家级三等奖</div>
-          <h3>开源安全奖励计划 · 开源软件重写赛道</h3>
-          <p>2024 · 成员</p>
-        </div>
-        <div class="award-card">
-          <div class="award-level bronze">国家级三等奖</div>
-          <h3>全国高校密码数学挑战赛</h3>
-          <p>2025 · 队长</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 联系 -->
-  <section class="section section-alt" id="contact">
-    <div class="container">
-      <h2 class="section-title">联系我</h2>
-      <p class="contact-intro">
-        对密码学、AI 安全、数学建模感兴趣？欢迎交流合作。
-      </p>
-      <div class="contact-links">
-        <a href="https://github.com/YangUpdate" target="_blank" rel="noopener" class="contact-card">
-          <span class="contact-icon">🐙</span>
-          <span class="contact-label">GitHub</span>
-          <span class="contact-value">@YangUpdate</span>
+      <div class="sidebar-links">
+        <a href="mailto:gengxinyang@sjtu.edu.cn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg>
+          Email
         </a>
-        <a href="mailto:gengxinyang@sjtu.edu.cn" class="contact-card">
-          <span class="contact-icon">📧</span>
-          <span class="contact-label">邮箱</span>
-          <span class="contact-value">gengxinyang@sjtu.edu.cn</span>
+        <a href="https://github.com/YangUpdate" target="_blank" rel="noopener">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+          GitHub
+        </a>
+        <a href="images/you.png" target="_blank">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg>
+          <span data-lang="en">Photo</span>
+          <span data-lang="zh">照片</span>
         </a>
       </div>
-    </div>
-  </section>
 
-  <!-- 页脚 -->
+      <div class="sidebar-controls">
+        <button class="ctrl-btn" id="langToggle">
+          <span data-lang="en">中文</span>
+          <span data-lang="zh">EN</span>
+        </button>
+        <button class="ctrl-btn" id="themeToggle">🌙</button>
+      </div>
+    </aside>
+
+    <!-- ===== Main Content ===== -->
+    <main class="main-content">
+
+      <!-- About -->
+      <section id="about">
+        <h2 class="section-heading">
+          <span data-lang="en">About</span>
+          <span data-lang="zh">关于</span>
+        </h2>
+        <div class="section-content">
+          <p data-lang="en">I am a first-year Ph.D. student in the School of Computer Science at Shanghai Jiao Tong University. I received my B.E. degree in Cyberspace Security from Shandong University in 2025, where I ranked in the top 15% and was awarded the Outstanding Graduate honor. My research interests lie at the intersection of cryptography and artificial intelligence, with a particular focus on homomorphic encryption, post-quantum cryptography, and AI security.</p>
+          <p data-lang="zh">我是上海交通大学计算机学院的博士一年级研究生。2025年本科毕业于山东大学网络空间安全学院，专业排名前15%，获校级优秀毕业生荣誉。研究方向聚焦于密码学与人工智能的交叉领域，特别关注同态加密、后量子密码和AI安全。</p>
+        </div>
+      </section>
+
+      <!-- News -->
+      <section id="news">
+        <h2 class="section-heading">
+          <span data-lang="en">News</span>
+          <span data-lang="zh">动态</span>
+        </h2>
+        <div class="section-content">
+          <ul class="news-list">
+            <li>
+              <span class="news-date">2025.09</span>
+              <span data-lang="en">Started Ph.D. at Shanghai Jiao Tong University.</span>
+              <span data-lang="zh">入读上海交通大学博士研究生。</span>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Education -->
+      <section id="education">
+        <h2 class="section-heading">
+          <span data-lang="en">Education</span>
+          <span data-lang="zh">教育经历</span>
+        </h2>
+        <div class="section-content">
+          <div class="entry">
+            <div class="entry-header">
+              <h3>
+                <span data-lang="en">Shanghai Jiao Tong University</span>
+                <span data-lang="zh">上海交通大学</span>
+              </h3>
+              <span class="entry-date">2025 — Present</span>
+            </div>
+            <p class="entry-role">
+              <span data-lang="en">Ph.D. in Computer Science</span>
+              <span data-lang="zh">计算机科学 · 博士</span>
+            </p>
+          </div>
+          <div class="entry">
+            <div class="entry-header">
+              <h3>
+                <span data-lang="en">Shandong University</span>
+                <span data-lang="zh">山东大学</span>
+              </h3>
+              <span class="entry-date">2021 — 2025</span>
+            </div>
+            <p class="entry-role">
+              <span data-lang="en">B.E. in Cyberspace Security · Top 15% · Outstanding Graduate</span>
+              <span data-lang="zh">网络空间安全 · 本科 · 专业前15% · 校级优秀毕业生</span>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Research Interests -->
+      <section id="research">
+        <h2 class="section-heading">
+          <span data-lang="en">Research Interests</span>
+          <span data-lang="zh">研究方向</span>
+        </h2>
+        <div class="section-content">
+          <div class="tag-list">
+            <span class="tag"><span data-lang="en">Homomorphic Encryption</span><span data-lang="zh">同态加密</span></span>
+            <span class="tag"><span data-lang="en">Post-Quantum Cryptography</span><span data-lang="zh">后量子密码</span></span>
+            <span class="tag"><span data-lang="en">AI Security</span><span data-lang="zh">AI安全</span></span>
+            <span class="tag"><span data-lang="en">Applied Cryptography</span><span data-lang="zh">应用密码学</span></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Publications -->
+      <section id="publications">
+        <h2 class="section-heading">
+          <span data-lang="en">Publications</span>
+          <span data-lang="zh">论文发表</span>
+        </h2>
+        <div class="section-content">
+          <p class="empty-note">
+            <span data-lang="en">No publications yet. Stay tuned.</span>
+            <span data-lang="zh">暂无已发表论文，敬请期待。</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- Previous Projects -->
+      <section id="projects">
+        <h2 class="section-heading">
+          <span data-lang="en">Previous Projects</span>
+          <span data-lang="zh">项目经历</span>
+        </h2>
+        <div class="section-content">
+
+          <div class="entry">
+            <div class="entry-header">
+              <h3>
+                <span data-lang="en">GM-Shield: Distributed Zero-Knowledge Proof System Based on SM9</span>
+                <span data-lang="zh">GM-Shield：基于SM9的分布式零知识证明系统</span>
+              </h3>
+              <span class="entry-date">2023 — 2024</span>
+            </div>
+            <p class="entry-role">
+              <span data-lang="en">Principal Investigator · National Innovation Training Program</span>
+              <span data-lang="zh">第一主持人 · 国家级大学生创新创业训练计划</span>
+            </p>
+            <p data-lang="en" class="entry-desc">Built a distributed zero-knowledge proof system supporting SM9 signatures based on Pianist. Rewrote the Zkrypt ZKP algorithm library in Go (<a href="https://github.com/Azzzting/gbn" target="_blank" rel="noopener">GBN library</a>), implementing BN elliptic curve family algorithms for the Go ecosystem.</p>
+            <p data-lang="zh" class="entry-desc">基于Pianist构建支持SM9签名的分布式零知识证明系统。负责Zkrypt零知识证明算法库的Go语言重写（<a href="https://github.com/Azzzting/gbn" target="_blank" rel="noopener">GBN库</a>），补充了BN椭圆曲线族相关算法在Go生态中的实现。</p>
+          </div>
+
+          <div class="entry">
+            <div class="entry-header">
+              <h3>
+                <span data-lang="en">Pricing and Replenishment Decision for Vegetable Products</span>
+                <span data-lang="zh">蔬菜类商品定价与补货决策</span>
+              </h3>
+              <span class="entry-date">2023</span>
+            </div>
+            <p class="entry-role">
+              <span data-lang="en">Team Leader · CUMCM · National Second Prize</span>
+              <span data-lang="zh">队长 · 全国大学生数学建模竞赛 · 国家级二等奖</span>
+            </p>
+            <p data-lang="en" class="entry-desc">Led the full pipeline of data processing, predictive modeling, and optimization. Used correlation analysis, curve fitting, and time series methods to forecast demand, then built linear and integer programming models for optimal pricing and replenishment.</p>
+            <p data-lang="zh" class="entry-desc">负责数据处理、预测建模与优化求解全流程。基于相关性分析、曲线拟合与时间序列方法预测需求，构建线性规划与整数规划模型求解最优定价与补货方案。</p>
+          </div>
+
+          <div class="entry">
+            <div class="entry-header">
+              <h3>
+                <span data-lang="en">Proxy Re-Encryption Scheme for Post-Quantum Migration</span>
+                <span data-lang="zh">面向后量子算法迁移的代理转加密方案</span>
+              </h3>
+              <span class="entry-date">2023</span>
+            </div>
+            <p class="entry-role">
+              <span data-lang="en">Core Member · National Cryptography Technology Competition · National First Prize</span>
+              <span data-lang="zh">核心成员 · 全国密码技术竞赛 · 国家级一等奖</span>
+            </p>
+            <p data-lang="en" class="entry-desc">Designed a post-quantum migration proxy re-encryption system based on SM2, KP-PRE, and Kyber. Responsible for SM2 implementation and PyQt interface development.</p>
+            <p data-lang="zh" class="entry-desc">设计基于国密SM2、KP-PRE代理重加密与抗量子算法Kyber的数据后量子迁移代理转加密系统。负责国密算法实现与PyQt界面开发。</p>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Honors & Awards -->
+      <section id="awards">
+        <h2 class="section-heading">
+          <span data-lang="en">Honors &amp; Awards</span>
+          <span data-lang="zh">荣誉与获奖</span>
+        </h2>
+        <div class="section-content">
+          <ul class="awards-list">
+            <li>
+              <span class="award-date">2025</span>
+              <span data-lang="en">National Third Prize · National College Cryptography Math Challenge</span>
+              <span data-lang="zh">国家级三等奖 · 全国高校密码数学挑战赛</span>
+            </li>
+            <li>
+              <span class="award-date">2024</span>
+              <span data-lang="en">National Third Prize · Open Source Security Reward Program</span>
+              <span data-lang="zh">国家级三等奖 · 开源安全奖励计划</span>
+            </li>
+            <li>
+              <span class="award-date">2023</span>
+              <span data-lang="en">National First Prize · 8th National Cryptography Technology Competition</span>
+              <span data-lang="zh">国家级一等奖 · 第八届全国密码技术竞赛</span>
+            </li>
+            <li>
+              <span class="award-date">2023</span>
+              <span data-lang="en">National Second Prize · CUMCM</span>
+              <span data-lang="zh">国家级二等奖 · 全国大学生数学建模竞赛</span>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
   <footer class="footer">
-    <div class="container">
-      <p>&copy; 2026 Xinyang Geng. Built with ❤️ and hosted on GitHub Pages.</p>
-    </div>
+    <p>&copy; 2026 Xinyang Geng</p>
   </footer>
 
-  <script src="script.js"></script>
+  <script src="script.js?v=3"></script>
 </body>
 </html>
