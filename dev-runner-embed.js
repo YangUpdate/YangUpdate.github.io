@@ -40,7 +40,7 @@
   sec.id = 'game';
   sec.className = 'home-section';
   sec.innerHTML =
-    '<h2 data-zh="小游戏" data-en="Game">Game</h2>' +
+    '<h2 data-zh="彩蛋" data-en="Easter egg">Easter egg</h2>' +
     '<div class="card">' +
       '<div class="card__body">' +
         '<p data-zh="致敬 Dinosaur Game" data-en="A tribute to Dinosaur Game">' +
