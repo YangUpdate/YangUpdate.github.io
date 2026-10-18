@@ -43,9 +43,9 @@
     '<h2 data-zh="小游戏" data-en="Game">Game</h2>' +
     '<div class="card">' +
       '<div class="card__body">' +
-        '<p data-zh="一个进程在代码里没完没了地跑，躲开 <code>;</code>、<code>{}</code> 和从代码里爬出来的 bug。撞上什么就报什么错。"' +
-           ' data-en="A process that runs forever, dodging <code>;</code>, <code>{}</code> and bugs &mdash; until it throws.">' +
-           'A process that runs forever, dodging <code>;</code>, <code>{}</code> and bugs &mdash; until it throws.</p>' +
+        '<p data-zh="致敬 Dinosaur Game —— 一个进程在代码里没完没了地跑，躲开 <code>;</code>、<code>{}</code> 和从代码里爬出来的 bug。撞上什么就报什么错。"' +
+           ' data-en="A tribute to Dinosaur Game &mdash; a process that runs forever, dodging <code>;</code>, <code>{}</code> and bugs &mdash; until it throws.">' +
+           'A tribute to Dinosaur Game &mdash; a process that runs forever, dodging <code>;</code>, <code>{}</code> and bugs &mdash; until it throws.</p>' +
         '<div class="dr-frame">' +
           '<iframe title="Dev Runner" loading="lazy"></iframe>' +
         '</div>' +
