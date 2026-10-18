@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Dev Runner · 极简程序员跑酷</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%23f7f7f7'/><rect x='11' y='9' width='10' height='12' fill='%23535353'/><rect x='14' y='6' width='4' height='3' fill='%23535353'/><rect x='12' y='21' width='2' height='6' fill='%23535353'/><rect x='18' y='21' width='2' height='6' fill='%23535353'/></svg>">
+<style>
+  /* 配色走变量：暗色只是把纸和墨对调，画面上仍然只有一个颜色 */
+  :root{--bg:#f7f7f7;--ink:#535353;--dim:#bdbdbd;--tip:#8a8a8a}
+  html.dark{--bg:#0d1117;--ink:#e6edf3;--dim:#6e7681;--tip:#8b949e}
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;display:flex;align-items:center;justify-content:center;
+    background:var(--bg);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    -webkit-user-select:none;user-select:none;touch-action:manipulation}
+  #wrap{width:min(96vw,760px);text-align:center}
+  #stage{position:relative;width:100%;aspect-ratio:760/220;border-radius:6px;overflow:hidden;
+    box-shadow:0 1px 3px rgba(0,0,0,.12);cursor:pointer;background:var(--bg)}
+  canvas{display:block;width:100%;height:100%}
+  #tip{margin-top:10px;color:var(--tip);font-size:12px;line-height:1.8}
+  #tip b{color:var(--ink)}
+  /* 嵌入到别人页面里（?embed=1）：撑满容器，去掉圆角阴影和页脚操作提示 */
+  html.embed,html.embed body{height:auto;display:block}
+  html.embed #wrap{width:100%}
+  html.embed #stage{border-radius:0;box-shadow:none}
+  html.embed #tip{display:none}
+  html.dark #stage{box-shadow:none}   /* 深色上投影只会显脏 */
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="stage"><canvas id="cv" width="760" height="220"></canvas></div>
+  <p id="tip"><b>space</b> jump()　<b>click</b> jump()　<b>↓</b> duck()　<b>R</b> restart()<br>
+  // a process that runs forever, until it throws</p>
+</div>
+<script>
+/* =========================================================
+   Dev Runner —— 极简程序员跑酷，单文件零依赖
+   一个进程在代码里没完没了地跑，躲开 ; ;; {} </> {}{}，还有从代码里爬出来的 bug。
+   撞上什么就报什么错，最后一行是 Process exited with code 1。
+   ========================================================= */
+// 嵌入到别人页面时：?embed=1 去掉页脚和圆角，?theme=dark 换成暗色那一套
+const Q=new URLSearchParams(location.search);
+const EMBED=Q.get('embed')==='1', DARK=Q.get('theme')==='dark';
+if(EMBED)document.documentElement.classList.add('embed');
+if(DARK){
+  document.documentElement.classList.add('dark');
+  const ico=document.querySelector('link[rel=icon]');   // 标签页图标也跟着反色
+  if(ico)ico.href=ico.href.replace('%23f7f7f7','%230d1117').replace(/%23535353/g,'%23e6edf3');
+}
+
+const cv=document.getElementById('cv'),ctx=cv.getContext('2d');
+const W=760,H=220,GROUND=168;
+
+// 配色：全篇只有一个颜色（参考恐龙的单色极简）。
+// 暗色不是"换肤"——只是把纸和墨对调，任何时刻画面上仍然只有一个颜色。
+const SK=DARK
+  ? {bg:'#0d1117',ink:'#e6edf3',dim:'#6e7681',line:'#e6edf3'}
+  : {bg:'#f7f7f7',ink:'#535353',dim:'#bdbdbd',line:'#535353'};
+
+function seg(x1,y1,x2,y2,w,c){ctx.strokeStyle=c;ctx.lineWidth=w;ctx.lineCap='butt';
+  ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();}
+function rnd(a,b){return a+Math.random()*(b-a);}
+function pad(n,l){return String(Math.floor(n)).padStart(l,'0');}
+
+// ---------- 状态 ----------
+let state='ready';                 // ready | run | over
+let dist=0,speed=250,best=0;
+try{best=parseInt(localStorage.getItem('devrun_best')||'0')||0;}catch(e){}
+const P={x:96,y:GROUND,vy:0,onGround:true,duck:false,runT:0,hold:false,deadT:0};
+let obs=[],drift=[],spawnT=0;
+// 漂动的代码注释：每个程序员都写过的那几句
+const DRIFT=['// TODO','// FIXME','// TODO: fix this later','/* legacy, don\'t touch */',
+             '/* it works, don\'t ask */','// why is this here?'];
+// 预填充：一条注释从生成到飘出屏幕要十几秒，不预填充的话开局前几秒天空完全是空的
+function seedDrift(n){
+  for(let i=0;i<n;i++)drift.push({x:rnd(120,W),y:rnd(30,84),
+    s:DRIFT[Math.floor(Math.random()*DRIFT.length)],v:rnd(.7,1.3)});
+}
+// 地面的滚动偏移量：只存一个数，摩斯电码的相位全靠它（不再用随机点阵，保证人工规整）
+let ticks=0;
+
+// ---------- 障碍 ----------
+// 代码符号绘制：等宽字体真字形，居中放置、底部贴地
+function glyph(txt,x,y,w,h,c,size){
+  ctx.fillStyle=c;ctx.font='bold '+size+'px ui-monospace,Consolas,monospace';ctx.textAlign='center';
+  ctx.fillText(txt,x+w/2,y+h-3);}
+// kind: jump（跳过去）/ duck（滑铲钻过）/ none（高高飞过，不用管）
+const OBS={
+  // 代码符号一律用等宽字体真字形：任何尺寸都一眼可读，不会像手绘描边那样糊成竖条
+  brace:{w:34,h:34,kind:'jump',draw(x,y,w,h,c){glyph('{}',x,y,w,h,c,32);}},
+  semi:{w:16,h:30,kind:'jump',draw(x,y,w,h,c){glyph(';',x,y,w,h,c,30);}},
+  semi2:{w:40,h:30,kind:'jump',draw(x,y,w,h,c){glyph(';;',x,y,w,h,c,30);}},
+  tag:{w:54,h:32,kind:'jump',draw(x,y,w,h,c){glyph('</>',x,y,w,h,c,28);}},
+  braces2:{w:70,h:34,kind:'jump',draw(x,y,w,h,c){glyph('{}{}',x,y,w,h,c,32);}},
+  // bug：只有一种飞虫，但飞三个高度（对应恐龙翼龙）
+  // yOff = 障碍底部离地高度的负值。站立受击盒顶部离地36px、滑铲20px，据此定三档：
+  // 关键：判定框比精灵略大，所以"画面看着没碰到"也可能判定为撞。
+  // 因此每档的画面位置要明显压在玩家身上，而不是擦着头顶飞过——否则玩家会觉得死得莫名其妙。
+  bugHi:{w:32,h:24,kind:'none',yOff:-96,bug:true,draw:bugDraw},   // 头顶上方很高 → 不用管，直接跑过
+  bugMid:{w:32,h:24,kind:'duck',yOff:-24,bug:true,draw:bugDraw},  // 压在头上/脸上 → 低头，滑铲
+  bugLow:{w:32,h:24,kind:'jump',yOff:-2,bug:true,draw:bugDraw},   // 压在腿上/贴地 → 抬脚，跳过去
+};
+// 小 bug：与幽灵同一套像素画法（实心剪影 + 挖空的眼睛），两帧交替爬动腿，不再用细线涂鸦
+const BUG_A=[
+'.d........d.',
+'..d......d..',
+'...dddddd...',
+'..dbbbbbbd..',
+'.dbeebbeebd.',
+'dbbbbbbbbbbd',
+'dbbbbbbbbbbd',
+'.dbbbbbbbbd.',
+'..dddddddd..',
+'.d..d..d..d.',
+];
+const BUG_B=[
+'..d......d..',
+'.d........d.',
+'...dddddd...',
+'..dbbbbbbd..',
+'.dbeebbeebd.',
+'dbbbbbbbbbbd',
+'dbbbbbbbbbbd',
+'.dbbbbbbbbd.',
+'..dddddddd..',
+'..d..d..d..d',
+];
+function bugDraw(x,y,w,h,c,t){ // 爬行的小 bug（像素精灵，两帧腿交替）
+  drawPixels(Math.floor(t*8)%2?BUG_B:BUG_A,x,y+1,2);
+}
+
+// 投放：早期只出细的（先学会跳），450m 后 bug 登场（再学会滑铲）
+function spawn(forceK){
+  let pool;
+  if(dist<200)pool=['semi','semi','semi2'];
+  else if(dist<450)pool=['semi','semi2','brace','brace','tag'];
+  else pool=['semi2','brace','brace','tag','braces2','bugHi','bugMid','bugMid','bugLow'];
+  const k=forceK||pool[Math.floor(Math.random()*pool.length)];
+  const o=OBS[k];
+  // yb = 碰撞用的基准高度（不含摆动）；y = 画面高度（含摆动）
+  const oy=GROUND-o.h+(o.yOff||0);
+  obs.push({k,x:W+40,y:oy,yb:oy,w:o.w,h:o.h,kind:o.kind,t:0});   // yb=判定基准(不含摆动), y=画面高度
+  // 间距按速度算，永远保证跳得过去（恐龙的做法）。
+  // 方向必须对：速度越快，物理间距要越大，这样"时间间隔"才恒定。
+  // 旧公式 rnd(170,330)*(250/max(250,speed*.8)) 写反了——640 速度时间隔只剩 83px，
+  // 而跳跃滞空要飞 397px，跳一次必撞上后面好几个，死得莫名其妙。
+  const gap=Math.max(230, rnd(0.8,1.6)*speed);
+  spawnT=gap;
+}
+
+// ---------- 音效：终端蜂鸣 ----------
+// 单频方波，就是 printf("\a") 让终端响的那一声——机器的声音，不是游戏音效。
+// 用 WebAudio 实时合成，不引入任何音频文件，单文件零依赖得以保持。
+let actx=null;
+function beep(freq,dur,vol){
+  try{
+    if(!actx){
+      const AC=window.AudioContext||window.webkitAudioContext;
+      if(!AC)return;                       // 环境不支持就静默跳过
+      actx=new AC();
+    }
+    if(actx.state==='suspended')actx.resume();
+    const t=actx.currentTime;
+    const osc=actx.createOscillator(), g=actx.createGain();
+    osc.type='square';                     // 方波：冷硬，跟画面的单色无渐变是同一种审美
+    osc.frequency.value=freq;
+    g.gain.setValueAtTime(vol,t);
+    g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+    osc.connect(g);g.connect(actx.destination);
+    osc.onended=()=>{try{g.disconnect();}catch(e){}};   // 不断开的话每个音都留下一个连着 destination 的 GainNode
+    osc.start(t);osc.stop(t+dur);
+  }catch(e){}
+}
+
+// ---------- 输入 ----------
+// 死亡后必须先锁住输入一小会儿：否则你撞死时手指多半还按在空格上（键盘 keydown 会自动重复），
+// 死亡瞬间紧接着的重复按键会立刻 restart，结算画面一帧都看不到——表现为"撞了直接弹回起点"。
+const DEAD_LOCK=0.55;
+const canRestart=()=>state==='over'&&P.deadT>DEAD_LOCK;
+function jump(){
+  // 开局一律走 restart()，不要自己设 state：否则开始屏攒下的注释会带进新局
+  if(state==='ready'){restart();return;}
+  if(state==='over'){if(canRestart())restart();return;}
+  if(P.onGround){P.vy=-580;P.onGround=false;P.hold=true;beep(880,.03,.04);}
+}
+// P.duck 只在地面生效：空中按↓时画面本来就没有滑铲精灵，判定也跟着变矮的话，
+// 就成了肉眼看不见的"空中缩身"——跟 bugMid 那次"看着没碰到却判死"是同一类毛病。
+// duckWant 记住按键意图，落地时立刻接上，不丢手感。
+let duckWant=false;
+function duck(on){duckWant=on;P.duck=(on&&state==='run'&&P.onGround);}
+function restart(){
+  // 凡是"上一局留下来的东西"都要清掉，否则新局不干净：
+  // ticks=地面摩斯相位 / drift=天上还飘着的注释 / runT=跑步动画相位 / deathErr=上一条死因
+  obs=[];drift=[];dist=0;speed=250;spawnT=0;ticks=0;deathErr=null;
+  P.y=GROUND;P.vy=0;P.onGround=true;P.duck=duckWant;P.deadT=0;P.hold=false;P.runT=0;
+  seedDrift(2);                       // 开局天上就有两条，不用等它慢慢生成
+  state='run';
+}
+addEventListener('keydown',e=>{const k=e.key.toLowerCase();
+  if(k===' '||k==='arrowup'||k==='w'||k==='enter'){e.preventDefault();jump();}
+  if(k==='arrowdown'||k==='s')duck(true);
+  if(k==='r'&&canRestart())restart();});
+addEventListener('keyup',e=>{const k=e.key.toLowerCase();
+  if(k===' '||k==='arrowup'||k==='w')P.hold=false;
+  if(k==='arrowdown'||k==='s')duck(false);});
+const stage=document.getElementById('stage');
+stage.addEventListener('pointerdown',e=>{
+  const r=stage.getBoundingClientRect();
+  const y=e.clientY-r.top;
+  if(state==='over'){if(canRestart())restart();return;}
+  if(y>r.height*.55){duck(true);setTimeout(()=>duck(false),380);}
+  else jump();});
+
+// ---------- 更新 ----------
+function update(dt){
+  // 漂动的注释（视差，稀疏+淡，不抢戏）。
+  // 只在跑动时生成与滚动：开始屏有遮罩盖着（攒着看不见，还会被带进新局），死亡后要跟着世界一起冻结。
+  if(state==='run'){
+    if(Math.random()<dt*.4)drift.push({x:W+40,y:rnd(30,84),s:DRIFT[Math.floor(Math.random()*DRIFT.length)],v:rnd(.7,1.3)});
+    for(let i=drift.length-1;i>=0;i--){drift[i].x-=speed*.22*drift[i].v*dt;
+      if(drift[i].x<-200)drift.splice(i,1);}
+  }
+
+  if(state==='ready'){P.runT+=dt*7;return;}
+  if(state==='over'){P.deadT+=dt;return;} // 死亡时世界冻结，地面摩斯电码也不再滚
+
+  ticks-=speed*dt;   // 地面摩斯电码与障碍同速左滚（保证和整体移动一致）
+
+  dist+=speed*dt;
+  P.runT+=dt*(speed/38);
+  speed=Math.min(640,250+dist*.05);
+  // 里程碑不再做任何视觉反馈（分数不闪，保持极简）
+
+  if(!P.onGround){
+    P.vy+=(P.hold&&P.vy<0?1550:2400)*dt;
+    P.y+=P.vy*dt;
+    if(P.y>=GROUND){P.y=GROUND;P.vy=0;P.onGround=true;P.hold=false;P.duck=duckWant;} // 落地即接上滑铲意图
+  }
+  spawnT-=speed*dt;
+  if(spawnT<=0)spawn();
+  for(let i=obs.length-1;i>=0;i--){
+    const o=obs[i];
+    o.x-=speed*dt;o.t+=dt;
+    // 摆动只加在画面高度 y 上，基准 yb 不动 —— 否则同一档 bug 会时撞时不撞
+    if(o.bug)o.y=o.yb+Math.sin(o.t*3)*2;
+    if(o.x+o.w<0){obs.splice(i,1);continue;} // 一离开屏幕左边立刻清除，不在身后逗留
+    if(hit(o)){die(o);break;}   // 同一帧撞到两个时以先命中的为准，避免死因被覆盖
+  }
+}
+function hit(o){
+  const pw=P.duck?36:24, ph=P.duck?20:36;
+  const px=P.x-pw/2, py=P.y-ph;
+  const oy=(o.yb!==undefined)?o.yb:o.y;   // 用基准高度判定，避开 bug 的上下摆动
+  return px<o.x+o.w-4 && px+pw>o.x+4 && py<oy+o.h-2 && py+ph>oy+2;
+}
+// 死因 = 错误信息：撞到什么符号，就犯什么错（恐龙没有的机制，死亡从惩罚变成收集）
+const ERRORS={
+  semi:   ['SyntaxError','Unexpected token \';\''],
+  semi2:  ['SyntaxError','Expected \';\' but found \';;\''],
+  brace:  ['RangeError','Maximum call stack size exceeded'],
+  braces2:['RangeError','Maximum call stack size exceeded'],
+  tag:    ['DOMException','Failed to parse tag \'</>\''],
+  bugHi:  ['BugError','it dropped on your head'],
+  bugMid: ['BugError','it flew into your face'],
+  bugLow: ['BugError','it bit your ankle'],
+};
+let deathErr=null;
+function die(o){
+  state='over';P.deadT=0;beep(180,.16,.05);
+  deathErr=(o&&ERRORS[o.k])||['Error','Process exited unexpectedly'];
+  if(dist>best){best=Math.floor(dist);try{localStorage.setItem('devrun_best',best);}catch(e){}}
+}
+
+// ---------- 绘制 ----------
+// 地面装饰：DEV RUNNER 的摩斯电码（点 + 划，随世界循环滚动）。
+// 只有两种元素——是"编码传输"的语言，比刻度尺（排版对齐）更程序员，
+// 又比二进制安静：不引入字母，不会跟天空的注释抢戏。跑久了能读出来，是个彩蛋。
+const MORSE_TAB={D:'-..',E:'.',V:'...-',R:'.-.',U:'..-',N:'-.'};
+const M_DOT=3, M_DASH=9, M_GAP=3, M_LGAP=9, M_WGAP=21;
+const MORSE=[];   // 一个周期内的笔画 {x, w}
+let MORSE_T=0;    // 一个周期的总宽
+(function(){
+  let x=0;
+  'DEV RUNNER'.split(' ').forEach((word,wi)=>{
+    if(wi)x+=M_WGAP;                    // 词间隔
+    word.split('').forEach((ch,li)=>{
+      if(li)x+=M_LGAP;                  // 字母间隔
+      (MORSE_TAB[ch]||'').split('').forEach((s,ei)=>{
+        if(ei)x+=M_GAP;                 // 笔画间隔
+        const w=(s==='-')?M_DASH:M_DOT;
+        MORSE.push({x:x,w:w});x+=w;
+      });
+    });
+  });
+  MORSE_T=x+M_WGAP;                     // 末尾留白，循环衔接才自然
+})();
+function drawBG(){
+  const s=SK;
+  ctx.fillStyle=s.bg;ctx.fillRect(0,0,W,H);
+  // 地面：实线 + 摩斯电码数据流（随世界同速左滚，循环播放 DEV RUNNER）
+  ctx.fillStyle=s.line;ctx.fillRect(0,GROUND,W,2);
+  ctx.fillStyle=s.dim;
+  let phase=ticks%MORSE_T; if(phase>0)phase-=MORSE_T;   // 归一到 (-MORSE_T, 0]
+  for(let rep=0;rep<=Math.ceil(W/MORSE_T);rep++){
+    const off=phase+rep*MORSE_T;
+    for(const m of MORSE){
+      const x=Math.round(m.x+off);
+      if(x>=-12&&x<=W)ctx.fillRect(x,GROUND+7,m.w,3);
+    }
+  }
+}
+
+// 主角：像素小幽灵 —— 单色剪影 + 挖空的脸（恐龙的做法：一个色块，细节用背景色抠出来）
+// 身体上的 >_ 是终端提示符，全部只用"墨色 + 纸色"两色，与场景严格一致
+const INK=SK.ink, PAPER=SK.bg;   // 挖空用的纸色必须跟当前配色一致，否则暗色下抠出白边
+const GHOST_RUN=[   // 12宽×14高：b/d=墨色实心，e=眼(挖空)，t=终端 >_ (挖空)
+'....dddd....',
+'..ddbbbbdd..',
+'.ddbbbbbbdd.',
+'.dbbbbbbbbd.',
+'.dbeebbeebd.',
+'.dbeebbeebd.',
+'.dbbbbbbbbd.',
+'.dbbtbbbbbd.',
+'.dbbbtbbbbd.',
+'.dbbtbttbbd.',
+'.dbbbbbbbbd.',
+'.dbbbbbbbbd.',
+'..dbbbbbbd..',
+'...dddddd...',
+];
+const GHOST_DUCK=[  // 20宽×8高：滑铲时压扁的幽灵
+'......dddddddd......',
+'..ddbbbbbbbbbbdd....',
+'.dbbbbbbbbbbbbbbdd..',
+'.dbeebbbbbbbbeebbd..',
+'dbbbbbbbbbbbbbbbbbd.',
+'dbbbbbttttbbbbbbbd..',
+'.dbbbbbbbbbbbbbbbd..',
+'..dddddddddddddddd..',
+];
+const PCOL={d:INK,b:INK,e:PAPER,t:PAPER};   // 只用得到四种：描边/实心/挖空的眼/挖空的 >_
+function drawPixels(spr,px,py,sc){
+  for(let r=0;r<spr.length;r++){const row=spr[r];
+    for(let c=0;c<row.length;c++){
+      const ch=row[c];if(ch==='.')continue;
+      ctx.fillStyle=PCOL[ch]||INK;
+      ctx.fillRect(px+c*sc,py+r*sc,sc,sc);}}
+}
+function drawPlayer(){
+  ctx.save();ctx.translate(P.x,P.y);
+  if(state==='over')ctx.rotate(Math.min(P.deadT*4,1)*1.5); // 摔倒
+  const sc=2;
+  const running=state==='run'&&P.onGround&&!P.duck;
+  // 悬浮高度（跑动时轻微上下浮动）
+  const hover=running?2+Math.sin(P.runT*2)*1.5:1;
+  // 身体：滑铲时贴地锚定（底部压在地面线上），站立/跳跃时悬浮+脚补空隙
+  const spr=(P.duck&&P.onGround&&state==='run')?GHOST_DUCK:GHOST_RUN;
+  const sprH=spr.length*sc, sprW=(spr===GHOST_DUCK?20:12)*sc;
+  const bodyY=(spr===GHOST_DUCK)?-(sprH+1):-(sprH+8)+hover;
+  drawPixels(spr,-sprW/2,bodyY,sc);
+  // 小脚（跑动交替，跳跃收起，滑铲藏在身体下）
+  if(state!=='over'&&!(P.duck&&P.onGround)){
+    const footY=-4;
+    const la=running?Math.sin(P.runT*2)*3:(!P.onGround?0:2);
+    const lb=running?-Math.sin(P.runT*2)*3:(!P.onGround?0:-2);
+    ctx.fillStyle=INK;
+    if(!P.onGround){ctx.fillRect(-5,bodyY+sprH-2,4,4);ctx.fillRect(2,bodyY+sprH-2,4,4);}
+    else{ctx.fillRect(-6+la,footY-1,4,4);ctx.fillRect(2+lb,footY-1,4,4);}
+  }
+  // 死亡：X 眼（画在挖空的眼眶里）
+  if(state==='over'){
+    ctx.strokeStyle=INK;ctx.lineWidth=1.6;
+    const ey=bodyY+4*sc;
+    for(const ex of [-4*sc,3*sc]){
+      seg(ex,ey,ex+4,ey+4,1.6,INK);seg(ex+4,ey,ex,ey+4,1.6,INK);}
+  }
+  ctx.restore();
+}
+
+function drawHUD(){
+  // HUD：一行终端输出，常亮不闪烁
+  const s=SK;
+  ctx.font='bold 14px ui-monospace,monospace';ctx.textAlign='right';
+  // 分数：常亮，不做任何闪烁（用户明确要求）。
+  // 单位是 lines，与死亡屏的 "> running... N lines" 统一；HI 是恐龙的布局，跟程序员没关系。
+  ctx.fillStyle=s.ink;
+  ctx.fillText('> '+pad(dist,5)+' lines   best:'+pad(best,5),W-16,28);
+  ctx.fillStyle=s.ink;
+  if(state==='ready'){
+    ctx.fillStyle=s.bg;ctx.globalAlpha=.88;ctx.fillRect(0,0,W,H);ctx.globalAlpha=1;
+    ctx.fillStyle=s.ink;ctx.textAlign='center';
+    ctx.font='bold 15px ui-monospace,monospace';ctx.fillText('$ ./dev-runner --endless',W/2,H/2-22);
+    ctx.font='13px ui-monospace,monospace';ctx.fillStyle=s.dim;
+    ctx.fillText('> press SPACE / click to start',W/2,H/2+6);
+    ctx.fillText('// jump(hold)  ·  duck()',W/2,H/2+28);
+  }
+  if(state==='over'){
+    ctx.fillStyle=s.bg;ctx.globalAlpha=.9;ctx.fillRect(0,0,W,H);ctx.globalAlpha=1;
+    ctx.fillStyle=s.ink;ctx.textAlign='center';
+    // 一整段运行日志：命令 → 进度 → 报错（撞什么报什么）→ 退出码
+    const E=deathErr||['Error','Process exited unexpectedly'];
+    ctx.fillStyle=s.dim;ctx.font='11px ui-monospace,monospace';
+    ctx.fillText('$ ./dev-runner',W/2,62);
+    ctx.fillStyle=s.ink;ctx.font='12px ui-monospace,monospace';
+    ctx.fillText('> running... '+Math.floor(dist)+' lines'+(Math.floor(dist)>=best&&dist>0?'   [ NEW BEST ]':''),W/2,82);
+    ctx.font='bold 14px ui-monospace,monospace';
+    ctx.fillText('Uncaught '+E[0]+':',W/2,108);
+    ctx.font='12px ui-monospace,monospace';
+    ctx.fillText('  '+E[1],W/2,126);
+    ctx.fillStyle=s.dim;ctx.font='11px ui-monospace,monospace';
+    ctx.fillText('    at runner.js:'+(Math.floor(dist/4)%790+42),W/2,144);
+    ctx.fillStyle=s.ink;ctx.font='12px ui-monospace,monospace';
+    ctx.fillText('Process exited with code 1',W/2,170);
+    ctx.fillStyle=s.dim;ctx.font='11px ui-monospace,monospace';
+    ctx.fillText('press SPACE / click to restart',W/2,194);
+  }
+}
+
+function render(){
+  const s=SK;
+  drawBG();
+  // 漂动注释
+  ctx.font='11px ui-monospace,monospace';ctx.textAlign='left';ctx.fillStyle=s.dim;
+  for(const d of drift)ctx.fillText(d.s,d.x,d.y);
+  for(const o of obs)OBS[o.k].draw(o.x,o.y,o.w,o.h,s.ink,o.t);
+  drawPlayer();
+  drawHUD();
+}
+
+let last=performance.now();
+function loop(now){let dt=(now-last)/1000;last=now;if(dt>.05)dt=.05;update(dt);render();requestAnimationFrame(loop);}
+render();requestAnimationFrame(loop);
+
+// 调试/自动化接口
+window.__run={get state(){return state;},get dist(){return dist;},get obs(){return obs;},get P(){return P;},get deathErr(){return deathErr;},get ticks(){return ticks;},get drift(){return drift;},
+  jump,duck,restart,start(){state='run';},
+  // 测试注入：把指定障碍摆到指定 x（供截图/验证用）
+  place(kind,x){obs.length=0;spawn(kind);const o=obs[0];if(o)o.x=x;return o?{k:o.k,x:o.x,y:o.y,w:o.w,h:o.h}:null;}};
+
+// ?auto=1：自动演示（供验证脚本与演示用）
+if(location.search.includes('auto=1')){
+  state='run';seedDrift(2);window.__auto=true;
+  setInterval(()=>{
+    if(!window.__auto||state!=='run')return;
+    let near=null,nd=1e9;
+    for(const o of window.__run.obs){const d=o.x-P.x;if(d>-30&&d<nd){nd=d;near=o;}}
+    if(near){
+      // 加去重：否则 nd<100 期间每帧都会再排一个 setTimeout，白白堆十几个定时器
+      if(near.kind==='duck'){
+        if(nd<100&&!window.__ducking){
+          window.__ducking=true;duck(true);
+          setTimeout(()=>{duck(false);window.__ducking=false;},430);
+        }
+      }
+      // kind==='none' 是高空 bug：设计上直接跑过就行，跳起来反而会撞进它的高度区间
+      else if(near.kind==='jump'&&nd<near.w+70&&P.onGround)jump();
+    }
+  },16);
+}
+</script>
+</body>
+</html>
