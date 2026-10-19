@@ -19,6 +19,9 @@
   canvas{display:block;width:100%;height:100%}
   #tip{margin-top:10px;color:var(--tip);font-size:12px;line-height:1.8}
   #tip b{color:var(--ink)}
+  /* 触摸设备没有键盘：按键提示换成手指动作的说法 */
+  #tip .touch{display:none}
+  @media (pointer:coarse){#tip .kb{display:none}#tip .touch{display:inline}}
   /* 嵌入到别人页面里（?embed=1）：撑满容器，去掉圆角阴影和页脚操作提示 */
   html.embed,html.embed body{height:auto;display:block}
   html.embed #wrap{width:100%}
@@ -30,8 +33,8 @@
 <body>
 <div id="wrap">
   <div id="stage"><canvas id="cv" width="760" height="220"></canvas></div>
-  <p id="tip"><b>space</b> jump()　<b>click</b> jump()　<b>↓</b> duck()　<b>R</b> restart()<br>
-  // a process that runs forever, until it throws</p>
+  <p id="tip"><span class="kb"><b>space</b> / <b>click</b> jump()　<b>↓</b> duck()　<b>R</b> restart()</span><span class="touch"><b>tap</b> jump()　<b>tap</b> restart()</span><br>
+// a process that runs forever, until it throws</p>
 </div>
 <script>
 /* =========================================================
@@ -42,6 +45,10 @@
 // 嵌入到别人页面时：?embed=1 去掉页脚和圆角，?theme=dark 换成暗色那一套
 const Q=new URLSearchParams(location.search);
 const EMBED=Q.get('embed')==='1', DARK=Q.get('theme')==='dark';
+// 触摸设备（手机/平板）：只给"跳"这一个动作。
+// 这是 Chrome 恐龙原版的做法 —— 它移动端翼龙只有 2 档高度，砍掉了需要下蹲的那一档，
+// 于是手指点屏幕任何地方都是跳，根本不存在"点错区"的问题。
+const IS_TOUCH=matchMedia('(pointer:coarse)').matches;
 if(EMBED)document.documentElement.classList.add('embed');
 if(DARK){
   document.documentElement.classList.add('dark');
@@ -130,12 +137,18 @@ function bugDraw(x,y,w,h,c,t){ // 爬行的小 bug（像素精灵，两帧腿交
   drawPixels(Math.floor(t*8)%2?BUG_B:BUG_A,x,y+1,2);
 }
 
-// 投放：早期只出细的（先学会跳），450m 后 bug 登场（再学会滑铲）
+// 投放：早期只出细的（先学会跳）；跑过 450px 后 bug 登场。
+// 注意 450 是像素不是米 —— 障碍间距起步就有 230~400px，450px 只够放两三个障碍，
+// 换算下来约 1.7 秒就解锁了（别被"450"这个数字误导成很长的距离）。
+// 触摸设备不出 bugMid（手机上只能跳），所以手机上不存在"必须滑铲"这一档。
 function spawn(forceK){
   let pool;
   if(dist<200)pool=['semi','semi','semi2'];
   else if(dist<450)pool=['semi','semi2','brace','brace','tag'];
-  else pool=['semi2','brace','brace','tag','braces2','bugHi','bugMid','bugMid','bugLow'];
+  // 触摸设备不出「必须滑铲」的中档 bug —— 手机上只能跳，出了它就成了必死
+  else pool=IS_TOUCH
+    ? ['semi2','brace','brace','tag','braces2','bugHi','bugLow']
+    : ['semi2','brace','brace','tag','braces2','bugHi','bugMid','bugMid','bugLow'];
   const k=forceK||pool[Math.floor(Math.random()*pool.length)];
   const o=OBS[k];
   // yb = 碰撞用的基准高度（不含摆动）；y = 画面高度（含摆动）
@@ -192,7 +205,7 @@ function duck(on){duckWant=on;P.duck=(on&&state==='run'&&P.onGround);}
 function restart(){
   // 凡是"上一局留下来的东西"都要清掉，否则新局不干净：
   // ticks=地面摩斯相位 / drift=天上还飘着的注释 / runT=跑步动画相位 / deathErr=上一条死因
-  obs=[];drift=[];dist=0;speed=250;spawnT=0;ticks=0;deathErr=null;
+  obs=[];drift=[];dist=0;speed=250;spawnT=0;ticks=0;deathErr=null;deathNewBest=false;
   P.y=GROUND;P.vy=0;P.onGround=true;P.duck=duckWant;P.deadT=0;P.hold=false;P.runT=0;
   seedDrift(2);                       // 开局天上就有两条，不用等它慢慢生成
   state='run';
@@ -204,13 +217,18 @@ addEventListener('keydown',e=>{const k=e.key.toLowerCase();
 addEventListener('keyup',e=>{const k=e.key.toLowerCase();
   if(k===' '||k==='arrowup'||k==='w')P.hold=false;
   if(k==='arrowdown'||k==='s')duck(false);});
+// 切走窗口/标签页时收不到 keyup 和 pointerup，按键状态会一直挂着：
+// 回来后按一下空格会莫名跳成满跳（hold 还留着），或者角色一直保持滑铲（duckWant 没清）。
+// 这两种玩家都没法归因——他什么都没按，行为却不对。
+function clearHeld(){P.hold=false;P.duck=false;duckWant=false;}
+addEventListener('blur',clearHeld);
+document.addEventListener('visibilitychange',()=>{if(document.hidden)clearHeld();});
 const stage=document.getElementById('stage');
 stage.addEventListener('pointerdown',e=>{
-  const r=stage.getBoundingClientRect();
-  const y=e.clientY-r.top;
-  if(state==='over'){if(canRestart())restart();return;}
-  if(y>r.height*.55){duck(true);setTimeout(()=>duck(false),380);}
-  else jump();});
+  // 点击/触摸只有一个含义：跳。开始屏与结算屏则用于开始或重开（jump 内部分好了）。
+  // 滑铲只走键盘 ↓/S。曾经按上下半屏分流，结果想跳的人点偏到下半屏就变成滑铲而撞死，
+  // 这种误触玩家无法归因；而且桌面有键盘，本来就不缺滑铲的输入方式。
+  jump();});
 
 // ---------- 更新 ----------
 function update(dt){
@@ -265,11 +283,13 @@ const ERRORS={
   bugMid: ['BugError','it flew into your face'],
   bugLow: ['BugError','it bit your ankle'],
 };
-let deathErr=null;
+let deathErr=null, deathNewBest=false;
 function die(o){
   state='over';P.deadT=0;beep(180,.16,.05);
   deathErr=(o&&ERRORS[o.k])||['Error','Process exited unexpectedly'];
-  if(dist>best){best=Math.floor(dist);try{localStorage.setItem('devrun_best',best);}catch(e){}}
+  // 先记下是否破纪录，下面就会去改 best —— 顺序反了的话判断永远为真
+  deathNewBest=dist>best;
+  if(deathNewBest){best=Math.floor(dist);try{localStorage.setItem('devrun_best',best);}catch(e){}}
 }
 
 // ---------- 绘制 ----------
@@ -393,8 +413,10 @@ function drawHUD(){
     ctx.fillStyle=s.ink;ctx.textAlign='center';
     ctx.font='bold 15px ui-monospace,monospace';ctx.fillText('$ ./dev-runner --endless',W/2,H/2-22);
     ctx.font='13px ui-monospace,monospace';ctx.fillStyle=s.dim;
-    ctx.fillText('> press SPACE / click to start',W/2,H/2+6);
-    ctx.fillText('// jump(hold)  ·  duck()',W/2,H/2+28);
+    ctx.fillText(IS_TOUCH ? '> tap to start' : '> press SPACE / click to start',W/2,H/2+6);
+    // 触摸/点击起跳时 P.hold 会一直挂到落地（没有配对的 pointerup），所以点一下就是满跳，
+    // 不存在"按住跳更高"。文案里不能写 hold —— 那是在承诺一个不存在的机制。
+    ctx.fillText(IS_TOUCH ? '// tap = jump' : '// jump(hold)  ·  duck()',W/2,H/2+28);
   }
   if(state==='over'){
     ctx.fillStyle=s.bg;ctx.globalAlpha=.9;ctx.fillRect(0,0,W,H);ctx.globalAlpha=1;
@@ -404,7 +426,7 @@ function drawHUD(){
     ctx.fillStyle=s.dim;ctx.font='11px ui-monospace,monospace';
     ctx.fillText('$ ./dev-runner',W/2,62);
     ctx.fillStyle=s.ink;ctx.font='12px ui-monospace,monospace';
-    ctx.fillText('> running... '+Math.floor(dist)+' lines'+(Math.floor(dist)>=best&&dist>0?'   [ NEW BEST ]':''),W/2,82);
+    ctx.fillText('> running... '+Math.floor(dist)+' lines'+(deathNewBest?'   [ NEW BEST ]':''),W/2,82);
     ctx.font='bold 14px ui-monospace,monospace';
     ctx.fillText('Uncaught '+E[0]+':',W/2,108);
     ctx.font='12px ui-monospace,monospace';
@@ -414,7 +436,7 @@ function drawHUD(){
     ctx.fillStyle=s.ink;ctx.font='12px ui-monospace,monospace';
     ctx.fillText('Process exited with code 1',W/2,170);
     ctx.fillStyle=s.dim;ctx.font='11px ui-monospace,monospace';
-    ctx.fillText('press SPACE / click to restart',W/2,194);
+    ctx.fillText(IS_TOUCH ? 'tap to restart' : 'press SPACE / click to restart',W/2,194);
   }
 }
 
